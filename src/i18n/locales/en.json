@@ -1,0 +1,36 @@
+{
+  "nav": {
+    "home": "Home",
+    "tests": "Tests",
+    "results": "Results",
+    "settings": "Settings"
+  },
+  "home": {
+    "eyebrow": "YOUR TOEIC JOURNEY",
+    "title": "Your next mission: reach 800",
+    "latestScore": "Latest score",
+    "estimated": "Estimated score",
+    "goal": "Goal: {{score}} points",
+    "play": "Play",
+    "streak": "7-day streak",
+    "mission": "TODAY'S MISSION",
+    "missionTitle": "Part 5 · Grammar",
+    "missionDetail": "Answer 8 of 10 correctly"
+  },
+  "modes": {
+    "title": "Choose a practice mode",
+    "subtitle": "Every attempt uses a new selection within each Part's blueprint",
+    "full": "Full Test",
+    "fullDetail": "200 questions · 120 minutes",
+    "quick": "Quick Test",
+    "quickDetail": "50 questions · about 30 minutes",
+    "part": "Practice by Part",
+    "partDetail": "Choose Part 1–7 and difficulty",
+    "start": "Select mode"
+  },
+  "language": {
+    "label": "Language",
+    "thai": "ไทย",
+    "english": "English"
+  }
+}

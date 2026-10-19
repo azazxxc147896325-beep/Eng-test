@@ -1,0 +1,19 @@
+:root {
+  --navy-950: #071b31;
+  --navy-900: #102a43;
+  --blue-700: #165dcc;
+  --blue-600: #1769e0;
+  --blue-100: #eaf3ff;
+  --green-600: #168d61;
+  --green-100: #e8f7f0;
+  --amber-100: #fff4df;
+  --slate-700: #40556a;
+  --slate-500: #6c8093;
+  --slate-200: #dbe5ee;
+  --slate-100: #eef3f7;
+  --white: #ffffff;
+  --radius-sm: 10px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --shadow-card: 0 18px 45px rgb(16 42 67 / 10%);
+}

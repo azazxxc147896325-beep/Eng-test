@@ -12,10 +12,13 @@
   },
   "dependencies": {
     "@vitejs/plugin-react": "latest",
-    "vite": "latest",
+    "i18next": "^26.5.2",
     "react": "latest",
     "react-dom": "latest",
-    "react-router-dom": "latest"
+    "react-i18next": "^17.1.0",
+    "react-router-dom": "latest",
+    "vite": "latest",
+    "vite-plugin-pwa": "^2.0.0"
   },
   "devDependencies": {
     "@playwright/test": "latest",

@@ -1,0 +1,36 @@
+{
+  "nav": {
+    "home": "หน้าหลัก",
+    "tests": "ข้อสอบ",
+    "results": "ผลสอบ",
+    "settings": "ตั้งค่า"
+  },
+  "home": {
+    "eyebrow": "เส้นทาง TOEIC ของคุณ",
+    "title": "ภารกิจต่อไป พิชิต 800 คะแนน",
+    "latestScore": "คะแนนล่าสุด",
+    "estimated": "คะแนนประมาณการ",
+    "goal": "เป้าหมาย {{score}} คะแนน",
+    "play": "เล่น",
+    "streak": "ฝึกต่อเนื่อง 7 วัน",
+    "mission": "ภารกิจวันนี้",
+    "missionTitle": "Part 5 · Grammar",
+    "missionDetail": "ทำให้ถูก 8 จาก 10 ข้อ"
+  },
+  "modes": {
+    "title": "เลือกโหมดฝึก",
+    "subtitle": "ทุกชุดสุ่มใหม่ตามโครงสร้างของแต่ละ Part",
+    "full": "Full Test",
+    "fullDetail": "200 ข้อ · 120 นาที",
+    "quick": "Quick Test",
+    "quickDetail": "50 ข้อ · ประมาณ 30 นาที",
+    "part": "Practice by Part",
+    "partDetail": "เลือก Part 1–7 และระดับความยาก",
+    "start": "เลือกโหมด"
+  },
+  "language": {
+    "label": "ภาษา",
+    "thai": "ไทย",
+    "english": "English"
+  }
+}

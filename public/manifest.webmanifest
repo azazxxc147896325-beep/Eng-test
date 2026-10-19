@@ -1,0 +1,12 @@
+{
+  "name": "Score Quest",
+  "short_name": "ScoreQuest",
+  "description": "ฝึก TOEIC และติดตามคะแนนประมาณการ",
+  "start_url": "/home",
+  "display": "standalone",
+  "background_color": "#f5f9fd",
+  "theme_color": "#12355b",
+  "icons": [
+    { "src": "/icons/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}
