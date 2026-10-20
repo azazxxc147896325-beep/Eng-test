@@ -70,6 +70,7 @@ export function createGenerateQuestionHandler(deps: Dependencies) {
         try { await deps.logUsage(identity.id, input, code) } catch { /* Preserve the original response. */ }
       }
       if (status >= 500) console.error(error)
+      else console.warn(JSON.stringify({ event: 'generate_question_rejected', status, code }))
       return json({ code }, status, request)
     }
   }
