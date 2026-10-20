@@ -13,3 +13,4 @@ test-results/
 *.tsbuildinfo
 supabase/.branches/
 supabase/.temp/
+.worktrees/
