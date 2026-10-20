@@ -60,5 +60,15 @@
     "audioPlaying": "กำลังเล่นเสียง · เล่นได้ครั้งเดียว",
     "audioComplete": "เล่นเสียงจบแล้ว",
     "audioError": "เสียงมีปัญหา ระบบหยุดข้อสอบไว้ กรุณาติดต่อทีมช่วยเหลือ"
+  },
+  "results": {
+    "estimatedScore": "คะแนนประมาณการ",
+    "quickEstimate": "ช่วงคะแนนประมาณการ · ความเชื่อมั่นต่ำ",
+    "practiceAccuracy": "ความแม่นยำในการฝึก",
+    "listening": "Listening",
+    "reading": "Reading",
+    "disclaimer": "คะแนนนี้เป็นการประมาณจาก Score Quest ไม่ใช่คะแนน TOEIC อย่างเป็นทางการ",
+    "byPart": "ผลแยกตาม Part",
+    "focus": "ควรเน้นฝึก Part {{parts}} ต่อ"
   }
 }

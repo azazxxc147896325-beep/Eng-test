@@ -60,5 +60,15 @@
     "audioPlaying": "Audio playing · one play only",
     "audioComplete": "Audio complete",
     "audioError": "Audio failed. The attempt is paused; please contact support."
+  },
+  "results": {
+    "estimatedScore": "Estimated score",
+    "quickEstimate": "Estimated range · low confidence",
+    "practiceAccuracy": "Practice accuracy",
+    "listening": "Listening",
+    "reading": "Reading",
+    "disclaimer": "This Score Quest estimate is not an official TOEIC score.",
+    "byPart": "Results by Part",
+    "focus": "Focus next on Part {{parts}}"
   }
 }

@@ -101,6 +101,16 @@ h1 { max-width: 15ch; margin: 14px 0 18px; font-size: clamp(2.25rem, 6vw, 4.75re
 .mode-icon { font-size: 2rem; }
 .mode-card .button { margin-top: auto; }
 
+.results-page { display: grid; grid-template-columns: .8fr 1.2fr; gap: 22px; }
+.score-summary, .part-breakdown { padding: clamp(24px, 4vw, 42px); border: 1px solid var(--slate-200); border-radius: var(--radius-lg); background: var(--white); box-shadow: var(--shadow-card); }
+.result-total, .result-range { display: block; margin: 18px 0; color: var(--blue-700); font-size: clamp(3.5rem, 10vw, 6rem); line-height: 1; }
+.section-scores { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.section-scores span { padding: 12px; border-radius: 12px; background: var(--blue-100); }
+.part-result-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 10px; }
+.part-result-grid article { display: grid; gap: 4px; padding: 14px; border: 1px solid var(--slate-200); border-radius: 12px; }
+.part-result-grid article.weak { border-color: #efb44d; background: var(--amber-100); }
+.part-result-grid strong { font-size: 1.5rem; }
+
 .bottom-nav {
   position: fixed;
   z-index: 10;
@@ -124,6 +134,7 @@ h1 { max-width: 15ch; margin: 14px 0 18px; font-size: clamp(2.25rem, 6vw, 4.75re
 @media (max-width: 800px) {
   .streak { display: none; }
   .home-grid, .mode-grid { grid-template-columns: 1fr; }
+  .results-page { grid-template-columns: 1fr; overflow: auto; }
   .hero { min-height: 380px; text-align: center; justify-content: center; }
   .score-row { justify-content: center; }
   .mode-card { min-height: 210px; }

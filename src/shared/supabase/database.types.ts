@@ -319,6 +319,9 @@ isOneToOne: false
                            },
 "has_role":
 { Args: { "required_role": Database["public"]['Enums']["app_role"] }; Returns: boolean
+                           },
+"submit_attempt":
+{ Args: { "p_attempt_id": string,"p_scoring_version": string,"p_user_id": string }; Returns: string
                            }
           }
           Enums: {
