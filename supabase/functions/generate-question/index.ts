@@ -90,7 +90,7 @@ const defaultHandler = createGenerateQuestionHandler({
   logUsage: async (userId, request, outcome) => {
     const { error } = await createServiceClient().from('ai_generation_usage').insert({
       user_id: userId, requested_count: request.count, part: request.part,
-      model: Deno.env.get('GEMINI_MODEL') ?? 'gemini-2.5-flash', outcome,
+      model: Deno.env.get('GEMINI_MODEL') ?? 'gemini-3.5-flash-lite', outcome,
     })
     if (error) throw error
   },

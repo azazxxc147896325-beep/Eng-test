@@ -10,6 +10,6 @@ function requiredEnv(name: string) {
 export function createQuestionProvider(): AIQuestionProvider {
   return new GeminiQuestionProvider({
     apiKey: requiredEnv('GEMINI_API_KEY'),
-    model: Deno.env.get('GEMINI_MODEL') ?? 'gemini-2.5-flash',
+    model: Deno.env.get('GEMINI_MODEL') ?? 'gemini-3.5-flash-lite',
   })
 }
