@@ -69,6 +69,18 @@
     "reading": "Reading",
     "disclaimer": "This Score Quest estimate is not an official TOEIC score.",
     "byPart": "Results by Part",
-    "focus": "Focus next on Part {{parts}}"
+    "focus": "Focus next on Part {{parts}}",
+    "question": "Question {{number}}",
+    "explanation": "Explanation",
+    "transcript": "Transcript",
+    "review": "Answer review",
+    "reviewUnavailable": "Review is available only after you submit the attempt.",
+    "loadError": "Could not load results",
+    "loading": "Loading results…",
+    "history": "Your progress",
+    "progress": "Verified Full Test score progress",
+    "progressTable": "Verified Full Test score table",
+    "date": "Date",
+    "points": "points"
   }
 }

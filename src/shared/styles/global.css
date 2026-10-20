@@ -110,6 +110,23 @@ h1 { max-width: 15ch; margin: 14px 0 18px; font-size: clamp(2.25rem, 6vw, 4.75re
 .part-result-grid article { display: grid; gap: 4px; padding: 14px; border: 1px solid var(--slate-200); border-radius: 12px; }
 .part-result-grid article.weak { border-color: #efb44d; background: var(--amber-100); }
 .part-result-grid strong { font-size: 1.5rem; }
+.review-page { max-height: calc(100dvh - 72px); overflow: auto; }
+.review-page > h1, .history-page > h1 { max-width: none; font-size: clamp(2rem, 5vw, 3.5rem); }
+.review-question { margin-bottom: 18px; padding: clamp(20px, 4vw, 36px); border: 1px solid var(--slate-200); border-radius: var(--radius-md); background: var(--white); box-shadow: var(--shadow-card); }
+.review-question h2 { font-size: 1.35rem; }
+.review-question ul { padding: 0; list-style: none; }
+.review-question li { margin: 8px 0; padding: 10px 12px; border-radius: 10px; background: #f7f9fb; }
+.review-question li.correct { background: var(--green-100); color: var(--green-600); }
+.review-question li.incorrect { background: #fff0f0; color: #8f1d1d; }
+.prompt-translation, .explanation { color: var(--slate-700); }
+.explanation { margin-top: 18px; padding: 14px; border-left: 4px solid var(--blue-600); background: var(--blue-100); }
+.history-page { max-width: 860px; }
+.score-change { color: var(--green-600); font-size: 1.5rem; font-weight: 900; }
+.progress-chart { padding: clamp(20px, 4vw, 36px); border: 1px solid var(--slate-200); border-radius: var(--radius-lg); background: var(--white); box-shadow: var(--shadow-card); color: var(--blue-600); }
+.progress-chart svg { width: 100%; height: auto; }
+.progress-chart table { width: 100%; margin-top: 18px; border-collapse: collapse; color: var(--navy-900); }
+.progress-chart caption { margin-bottom: 8px; font-weight: 800; text-align: left; }
+.progress-chart th, .progress-chart td { padding: 10px; border-bottom: 1px solid var(--slate-200); text-align: left; }
 
 .bottom-nav {
   position: fixed;

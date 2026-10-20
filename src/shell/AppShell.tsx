@@ -22,7 +22,7 @@ export function AppShell() {
       <nav className="bottom-nav" aria-label="Primary">
         <NavLink to="/home">⌂ {t('nav.home')}</NavLink>
         <NavLink to="/play">▦ {t('nav.tests')}</NavLink>
-        <NavLink to="/results">▥ {t('nav.results')}</NavLink>
+        <NavLink to="/history">▥ {t('nav.results')}</NavLink>
         <a href="#settings">⚙ {t('nav.settings')}</a>
       </nav>
     </div>

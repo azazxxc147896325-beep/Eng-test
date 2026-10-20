@@ -69,6 +69,18 @@
     "reading": "Reading",
     "disclaimer": "คะแนนนี้เป็นการประมาณจาก Score Quest ไม่ใช่คะแนน TOEIC อย่างเป็นทางการ",
     "byPart": "ผลแยกตาม Part",
-    "focus": "ควรเน้นฝึก Part {{parts}} ต่อ"
+    "focus": "ควรเน้นฝึก Part {{parts}} ต่อ",
+    "question": "ข้อ {{number}}",
+    "explanation": "คำอธิบาย",
+    "transcript": "บทถอดเสียง",
+    "review": "ตรวจคำตอบ",
+    "reviewUnavailable": "ดูเฉลยได้หลังส่งข้อสอบเสร็จแล้วเท่านั้น",
+    "loadError": "โหลดผลสอบไม่สำเร็จ",
+    "loading": "กำลังโหลดผลสอบ…",
+    "history": "พัฒนาการของคุณ",
+    "progress": "กราฟพัฒนาการคะแนน Full Test",
+    "progressTable": "ตารางคะแนน Full Test ที่ยืนยันเวลาแล้ว",
+    "date": "วันที่",
+    "points": "คะแนน"
   }
 }

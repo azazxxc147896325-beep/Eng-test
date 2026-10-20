@@ -7,6 +7,9 @@ import { LoginPage } from '../auth/LoginPage'
 import { RequireRole } from './RequireRole'
 import { RequireUser } from './RequireUser'
 import { ExamPage } from '../exam/ui/ExamPage'
+import { ResultsPage } from '../results/ResultsPage'
+import { ReviewPage } from '../results/ReviewPage'
+import { HistoryPage } from '../results/HistoryPage'
 
 function Placeholder({ title }: { title: string }) {
   return <main className="page"><h1>{title}</h1></main>
@@ -23,7 +26,10 @@ export const router = createBrowserRouter([
       { index: true, element: <Navigate to="/home" replace /> },
       { path: 'home', element: <HomePage /> },
       { path: 'play', element: <RequireUser><ModeSelectPage /></RequireUser> },
-      { path: 'results', element: <RequireUser><Placeholder title="Results" /></RequireUser> },
+      { path: 'results', element: <Navigate to="/history" replace /> },
+      { path: 'results/:attemptId', element: <RequireUser><ResultsPage /></RequireUser> },
+      { path: 'results/:attemptId/review', element: <RequireUser><ReviewPage /></RequireUser> },
+      { path: 'history', element: <RequireUser><HistoryPage /></RequireUser> },
       {
         path: 'admin',
         element: <RequireRole role="admin"><Placeholder title="Admin" /></RequireRole>,
