@@ -10,6 +10,7 @@ export type CreateAttemptInput = {
 }
 
 export type AttemptItemSnapshot = {
+  attemptItemId: string
   ordinal: number
   section: ExamSection
   part: Part
@@ -29,6 +30,7 @@ export type AttemptSnapshot = {
   locale: 'th' | 'en'
   seed: string
   currentSection: ExamSection
+  serverNow: string
   startedAt: string
   sectionExpiresAt: string | null
   items: AttemptItemSnapshot[]

@@ -11,9 +11,11 @@ const snapshotSchema = z.object({
   locale: z.enum(['th', 'en']),
   seed: z.string(),
   currentSection: z.enum(['listening', 'reading', 'practice']),
+  serverNow: z.string(),
   startedAt: z.string(),
   sectionExpiresAt: z.string().nullable(),
   items: z.array(z.object({
+    attemptItemId: z.string(),
     ordinal: z.number().int().positive(),
     section: z.enum(['listening', 'reading', 'practice']),
     part: z.union([z.literal(1), z.literal(2), z.literal(3), z.literal(4), z.literal(5), z.literal(6), z.literal(7)]),

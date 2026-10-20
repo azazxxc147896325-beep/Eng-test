@@ -72,7 +72,7 @@ async function readSnapshot(client: ReturnType<typeof createServiceClient>, user
   if (attemptError || !attempt) throw new HttpError(404, 'attempt_not_found')
 
   const { data: items, error: itemError } = await client.from('attempt_items').select(`
-    ordinal, section, part, group_id, question_version_id, choice_order,
+    id, ordinal, section, part, group_id, question_version_id, choice_order,
     question_versions!inner(prompt, choice_shuffle_allowed,
       choices(id, label, content), media(id, kind, storage_path, metadata, status))
   `).eq('attempt_id', attemptId).order('ordinal')
@@ -86,7 +86,8 @@ async function readSnapshot(client: ReturnType<typeof createServiceClient>, user
 
   return {
     id: attempt.id, mode: attempt.mode, status: attempt.status, locale: attempt.locale, seed: attempt.seed,
-    currentSection: attempt.current_section, startedAt: attempt.started_at, sectionExpiresAt: attempt.section_expires_at,
+    currentSection: attempt.current_section, serverNow: new Date().toISOString(),
+    startedAt: attempt.started_at, sectionExpiresAt: attempt.section_expires_at,
     items: (items ?? []).map((item) => {
       const version = item.question_versions as unknown as Question & { choice_shuffle_allowed: boolean }
       const choiceOrder = item.choice_order as string[]
@@ -95,7 +96,7 @@ async function readSnapshot(client: ReturnType<typeof createServiceClient>, user
       const media = [...(version.media ?? []).filter((asset) => asset.status === 'published'),
         ...(groupMedia ?? []).filter((asset) => asset.group_id === item.group_id)]
       return {
-        ordinal: item.ordinal, section: item.section, part: item.part, groupId: item.group_id,
+        attemptItemId: item.id, ordinal: item.ordinal, section: item.section, part: item.part, groupId: item.group_id,
         questionVersionId: item.question_version_id, prompt: version.prompt,
         choiceShuffleAllowed: version.choice_shuffle_allowed, choiceOrder, choices,
         media: media.map((asset) => ({ id: asset.id, kind: asset.kind, storagePath: asset.storage_path, metadata: asset.metadata })),
