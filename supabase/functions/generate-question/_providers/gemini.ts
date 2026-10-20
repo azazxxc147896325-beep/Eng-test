@@ -3,6 +3,69 @@ import type { AIQuestionProvider, ContentDraft, GenerateQuestionRequest } from '
 
 type GeminiOptions = { apiKey: string; model: string; fetcher?: typeof fetch }
 
+function responseSchema(request: GenerateQuestionRequest) {
+  const questionCounts: Record<number, [number, number]> = {
+    1: [1, 1], 2: [1, 1], 3: [3, 3], 4: [3, 3], 5: [1, 1], 6: [4, 4], 7: [2, 5],
+  }
+  const groupTypes: Record<number, string[]> = {
+    1: ['photo'], 2: ['question_response'], 3: ['conversation'], 4: ['talk'],
+    5: ['single_question'], 6: ['text_completion'], 7: ['single_document', 'double_document', 'triple_document'],
+  }
+  const [minimumQuestions, maximumQuestions] = questionCounts[request.part]
+  const translationProperties: Record<string, unknown> = {
+    explanation: { type: 'string', minLength: 1 },
+    promptTranslation: { type: 'string' },
+  }
+  const translationRequired = ['explanation']
+  if (request.part <= 4) {
+    translationProperties.transcript = { type: 'string', minLength: 1 }
+    translationRequired.push('transcript')
+  }
+  const translation = { type: 'object', properties: translationProperties, required: translationRequired }
+  const choiceCount = request.part === 2 ? 3 : 4
+  return {
+    type: 'array', minItems: request.count, maxItems: request.count,
+    items: {
+      type: 'object',
+      properties: {
+        groupId: { type: 'string', minLength: 1 },
+        part: { type: 'integer', enum: [request.part] },
+        groupType: { type: 'string', enum: groupTypes[request.part] },
+        difficulty: { type: 'string', enum: [request.difficulty] },
+        media: { type: 'array', maxItems: 0, items: { type: 'object' } },
+        questions: {
+          type: 'array', minItems: minimumQuestions, maxItems: maximumQuestions,
+          items: {
+            type: 'object',
+            properties: {
+              id: { type: 'string', minLength: 1 },
+              prompt: { type: 'object', properties: { text: { type: 'string', minLength: 1 } }, required: ['text'] },
+              choiceShuffleAllowed: { type: 'boolean' },
+              choices: {
+                type: 'array', minItems: choiceCount, maxItems: choiceCount,
+                items: {
+                  type: 'object',
+                  properties: {
+                    id: { type: 'string', minLength: 1 }, label: { type: 'string', minLength: 1 },
+                    content: { type: 'object', properties: { text: { type: 'string', minLength: 1 } }, required: ['text'] },
+                    correct: { type: 'boolean' },
+                  },
+                  required: ['id', 'label', 'content', 'correct'],
+                },
+              },
+              translations: {
+                type: 'object', properties: { th: translation, en: translation }, required: ['th', 'en'],
+              },
+            },
+            required: ['id', 'prompt', 'choiceShuffleAllowed', 'choices', 'translations'],
+          },
+        },
+      },
+      required: ['groupId', 'part', 'groupType', 'difficulty', 'media', 'questions'],
+    },
+  }
+}
+
 export class GeminiQuestionProvider implements AIQuestionProvider {
   private readonly fetcher: typeof fetch
   constructor(private readonly options: GeminiOptions) { this.fetcher = options.fetcher ?? fetch }
@@ -14,7 +77,10 @@ export class GeminiQuestionProvider implements AIQuestionProvider {
         headers: { 'content-type': 'application/json', 'x-goog-api-key': this.options.apiKey },
         body: JSON.stringify({
           contents: [{ role: 'user', parts: [{ text: buildGenerationPrompt(request) }] }],
-          generationConfig: { responseMimeType: 'application/json', temperature: 0.8 },
+          generationConfig: {
+            responseFormat: { text: { mimeType: 'application/json', schema: responseSchema(request) } },
+            temperature: 0.8,
+          },
         }),
       }
     let response = await this.fetcher(url, init)

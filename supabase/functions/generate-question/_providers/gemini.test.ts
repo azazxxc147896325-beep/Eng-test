@@ -23,3 +23,17 @@ Deno.test('Gemini does not retry a validation/client response', async () => {
   try { await provider.generate(request) } catch { /* Expected. */ }
   assertEquals(calls, 1)
 })
+
+Deno.test('Gemini requests structured output matching the selected Part', async () => {
+  let sentBody: Record<string, unknown> = {}
+  const provider = new GeminiQuestionProvider({ apiKey: 'server-secret', model: 'test-model', fetcher: async (_url, init) => {
+    sentBody = JSON.parse(String(init?.body))
+    return success.clone()
+  } })
+  await provider.generate(request)
+  const config = sentBody.generationConfig as Record<string, unknown>
+  const format = config.responseFormat as { text: { mimeType: string; schema: { minItems: number; maxItems: number } } }
+  assertEquals(format.text.mimeType, 'application/json')
+  assertEquals(format.text.schema.minItems, 1)
+  assertEquals(format.text.schema.maxItems, 1)
+})
