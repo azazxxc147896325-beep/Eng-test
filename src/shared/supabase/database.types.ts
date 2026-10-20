@@ -314,7 +314,10 @@ isOneToOne: false
             [_ in never]: never
           }
           Functions: {
-            "has_role":
+            "create_attempt_snapshot":
+{ Args: { "p_blueprint_id": string,"p_current_section": string,"p_idempotency_key": string,"p_items": Json,"p_locale": string,"p_mode": Database["public"]['Enums']["exam_mode"],"p_section_duration_minutes": number,"p_seed": string,"p_user_id": string }; Returns: string
+                           },
+"has_role":
 { Args: { "required_role": Database["public"]['Enums']["app_role"] }; Returns: boolean
                            }
           }
