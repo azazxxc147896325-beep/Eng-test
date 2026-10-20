@@ -108,6 +108,7 @@
     "topic": "หัวข้อ",
     "generatePreview": "สร้างตัวอย่าง",
     "question": "ข้อ",
+    "choices": "ตัวเลือก",
     "correctAnswer": "คำตอบที่ถูก",
     "promptTranslation": "คำแปลโจทย์",
     "thaiExplanation": "คำอธิบายภาษาไทย",

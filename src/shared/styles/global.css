@@ -144,7 +144,7 @@ h1 { max-width: 15ch; margin: 14px 0 18px; font-size: clamp(2.25rem, 6vw, 4.75re
 .draft-question { padding: 16px; border: 1px solid var(--slate-200); border-radius: 12px; }
 .draft-question h3 { margin-top: 0; }
 .draft-prompt { font-size: 1.05rem; font-weight: 700; }
-.draft-choices { display: grid; gap: 8px; padding-left: 28px; }
+.draft-choices { display: grid; gap: 8px; padding-left: 14px; list-style: none; }
 .draft-choices .correct-choice { color: var(--green-600); font-weight: 700; }
 .draft-explanations { padding: 12px; border-radius: 10px; background: var(--blue-100); }
 .admin-actions { display: flex; gap: 10px; flex-wrap: wrap; }

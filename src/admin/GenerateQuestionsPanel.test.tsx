@@ -28,6 +28,7 @@ describe('GenerateQuestionsPanel', () => {
     expect(screen.queryByLabelText(/api key/i)).not.toBeInTheDocument()
     fireEvent.click(screen.getByRole('button', { name: /สร้างตัวอย่าง|generate preview/i }))
     expect(await screen.findByText(/Question preview/)).toBeVisible()
+    expect(screen.getByRole('list', { name: /ตัวเลือก|choices/i }).tagName).toBe('UL')
     expect(screen.getByText('A. at')).toBeVisible()
     expect(screen.getByLabelText(/คำตอบที่ถูก|correct answer/i)).toHaveTextContent('A. at')
     expect(screen.getByText('ใช้ at กับเวลาที่เฉพาะเจาะจง')).toBeVisible()

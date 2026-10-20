@@ -1,6 +1,7 @@
 import type { Session, SupabaseClient, User } from '@supabase/supabase-js'
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import type { Database } from '../shared/supabase/database.types'
+import { appPath, routePath } from '../app/basePath'
 
 type Profile = Database['public']['Tables']['profiles']['Row']
 type AppRole = Database['public']['Enums']['app_role']
@@ -69,7 +70,7 @@ export function AuthProvider({
   }, [client, resolveSession])
 
   const signInWithGoogle = useCallback(async () => {
-    const currentPath = `${window.location.pathname}${window.location.search}`
+    const currentPath = `${routePath(window.location.pathname)}${window.location.search}`
     if (!window.sessionStorage.getItem(RETURN_TO_KEY)) {
       window.sessionStorage.setItem(
         RETURN_TO_KEY,
@@ -79,7 +80,7 @@ export function AuthProvider({
 
     const { error } = await client.auth.signInWithOAuth({
       provider: 'google',
-      options: { redirectTo: `${window.location.origin}/auth/callback` },
+      options: { redirectTo: new URL(appPath('/auth/callback'), window.location.origin).toString() },
     })
     if (error) throw error
   }, [client])

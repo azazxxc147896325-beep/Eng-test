@@ -108,6 +108,7 @@
     "topic": "Topic",
     "generatePreview": "Generate preview",
     "question": "Question",
+    "choices": "Choices",
     "correctAnswer": "Correct answer",
     "promptTranslation": "Question translation",
     "thaiExplanation": "Thai explanation",

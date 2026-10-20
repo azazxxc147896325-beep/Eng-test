@@ -53,13 +53,13 @@ export function GenerateQuestionsPanel({ generate = generateWithCloud, saveDraft
       <div className="draft-preview">{draft.content.questions.map((question, questionIndex) => <section className="draft-question" key={question.id}>
         <h3>{t('admin.question')} {questionIndex + 1}</h3>
         <p className="draft-prompt">{contentText(question.prompt)}</p>
-        <ol className="draft-choices">
+        <ul className="draft-choices" aria-label={t('admin.choices')}>
           {question.choices.map((choice) => <li
             aria-label={choice.correct ? `${t('admin.correctAnswer')}: ${choice.label}. ${contentText(choice.content)}` : undefined}
             className={choice.correct ? 'correct-choice' : undefined}
             key={choice.id}
           >{choice.label}. {contentText(choice.content)}{choice.correct && <strong> — {t('admin.correctAnswer')}</strong>}</li>)}
-        </ol>
+        </ul>
         {question.translations.th.promptTranslation && <p><strong>{t('admin.promptTranslation')}:</strong> {question.translations.th.promptTranslation}</p>}
         <div className="draft-explanations">
           <p><strong>{t('admin.thaiExplanation')}:</strong> {question.translations.th.explanation}</p>

@@ -15,6 +15,7 @@ import { DashboardPage } from '../admin/DashboardPage'
 import { ReviewQueuePage } from '../admin/ReviewQueuePage'
 import { ImportPage } from '../admin/ImportPage'
 import { GenerateQuestionsPanel } from '../admin/GenerateQuestionsPanel'
+import { routerBasePath } from './basePath'
 
 export const router = createBrowserRouter([
   { path: '/login', element: <LoginPage /> },
@@ -43,4 +44,4 @@ export const router = createBrowserRouter([
       },
     ],
   },
-])
+], { basename: routerBasePath() })

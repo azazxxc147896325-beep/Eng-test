@@ -1,4 +1,4 @@
-import { Navigate } from 'react-router-dom'
+import { Link, Navigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { getReturnTo, useAuth } from './AuthProvider'
 
@@ -12,7 +12,7 @@ export function AuthCallbackPage() {
   return (
     <main className="auth-status">
       <p role="alert">{t('auth.callbackError')}</p>
-      <a href="/login">{t('auth.tryAgain')}</a>
+      <Link to="/login">{t('auth.tryAgain')}</Link>
     </main>
   )
 }
