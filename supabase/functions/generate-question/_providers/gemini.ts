@@ -3,6 +3,15 @@ import type { AIQuestionProvider, ContentDraft, GenerateQuestionRequest } from '
 
 type GeminiOptions = { apiKey: string; model: string; fetcher?: typeof fetch }
 
+async function apiError(response: Response) {
+  let detail = response.statusText || 'request_failed'
+  try {
+    const payload = await response.json() as { error?: { message?: string } }
+    if (payload.error?.message) detail = payload.error.message
+  } catch { /* Keep the HTTP status text for non-JSON errors. */ }
+  return detail.replace(/AIza[\w-]+/g, '[redacted]').replace(/[\r\n]+/g, ' ').slice(0, 500)
+}
+
 function responseSchema(request: GenerateQuestionRequest) {
   const questionCounts: Record<number, [number, number]> = {
     1: [1, 1], 2: [1, 1], 3: [3, 3], 4: [3, 3], 5: [1, 1], 6: [4, 4], 7: [2, 5],
@@ -85,7 +94,7 @@ export class GeminiQuestionProvider implements AIQuestionProvider {
       }
     let response = await this.fetcher(url, init)
     if (response.status === 429 || response.status >= 500) response = await this.fetcher(url, init)
-    if (!response.ok) throw new Error(`gemini_${response.status}`)
+    if (!response.ok) throw new Error(`gemini_${response.status}: ${await apiError(response)}`)
     const payload = await response.json() as { candidates?: Array<{ content?: { parts?: Array<{ text?: string }> } }> }
     const text = payload.candidates?.[0]?.content?.parts?.[0]?.text
     if (!text) throw new Error('gemini_empty_response')

@@ -1,4 +1,4 @@
-import { assertEquals } from 'jsr:@std/assert@1'
+import { assertEquals, assertRejects } from 'jsr:@std/assert@1'
 import { GeminiQuestionProvider } from './gemini.ts'
 
 const request = { part: 5 as const, count: 1, difficulty: 'medium' as const, skills: [], topic: 'office' }
@@ -18,9 +18,9 @@ Deno.test('Gemini does not retry a validation/client response', async () => {
   let calls = 0
   const provider = new GeminiQuestionProvider({ apiKey: 'server-secret', model: 'test-model', fetcher: async () => {
     calls += 1
-    return new Response('', { status: 400 })
+    return new Response(JSON.stringify({ error: { message: 'Unsupported schema field' } }), { status: 400 })
   } })
-  try { await provider.generate(request) } catch { /* Expected. */ }
+  await assertRejects(() => provider.generate(request), Error, 'gemini_400: Unsupported schema field')
   assertEquals(calls, 1)
 })
 
