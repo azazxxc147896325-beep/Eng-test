@@ -24,19 +24,22 @@ begin
     raise exception using errcode = '42501', message = 'Staff role required';
   end if;
   v_question_count := jsonb_array_length(coalesce(p_draft->'questions', '[]'::jsonb));
-  if v_part not between 1 and 7 or not case
-    when v_part in (1, 2, 5) then v_question_count = 1
-    when v_part in (3, 4) then v_question_count = 3
-    when v_part = 6 then v_question_count = 4
-    when v_part = 7 and p_draft->>'groupType' = 'single_document' then v_question_count between 2 and 4
-    when v_part = 7 and p_draft->>'groupType' in ('double_document', 'triple_document') then v_question_count = 5
-    else false end then
+  if v_part not between 1 and 7 or not (
+    case
+      when v_part in (1, 2, 5) then v_question_count = 1
+      when v_part in (3, 4) then v_question_count = 3
+      when v_part = 6 then v_question_count = 4
+      when v_part = 7 and p_draft->>'groupType' = 'single_document' then v_question_count between 2 and 4
+      when v_part = 7 and p_draft->>'groupType' in ('double_document', 'triple_document') then v_question_count = 5
+      else false
+    end
+  ) then
     raise exception using errcode = '22023', message = 'Invalid generated draft';
   end if;
   insert into public.question_groups(part, group_type, difficulty, status, created_by)
   values (v_part, p_draft->>'groupType', p_draft->>'difficulty', 'draft', v_actor) returning id into v_group_id;
   for v_question in select value from jsonb_array_elements(p_draft->'questions') loop
-    if jsonb_array_length(coalesce(v_question->'choices', '[]'::jsonb)) <> case when v_part = 2 then 3 else 4 end
+    if jsonb_array_length(coalesce(v_question->'choices', '[]'::jsonb)) <> (case when v_part = 2 then 3 else 4 end)
       or (select count(*) from jsonb_array_elements(v_question->'choices') choice where (choice->>'correct')::boolean) <> 1
       or coalesce(v_question->'translations'->'th'->>'explanation', '') = ''
       or coalesce(v_question->'translations'->'en'->>'explanation', '') = ''
