@@ -56,6 +56,9 @@
     "mark": "Mark",
     "close": "Close",
     "timed": "Timed",
-    "practice": "Practice"
+    "practice": "Practice",
+    "audioPlaying": "Audio playing · one play only",
+    "audioComplete": "Audio complete",
+    "audioError": "Audio failed. The attempt is paused; please contact support."
   }
 }

@@ -11,6 +11,7 @@ export function ExamLayout({ store }: { store: AttemptStore }) {
   const { t } = useTranslation()
   const state = useAttemptStore(store)
   const [navigatorOpen, setNavigatorOpen] = useState(false)
+  const [listeningUnlocked, setListeningUnlocked] = useState(true)
   const [, setTick] = useState(0)
   const navigatorButton = useRef<HTMLButtonElement>(null)
   const clock = useMemo(() => createServerClock(state.snapshot.serverNow), [state.snapshot.serverNow])
@@ -18,6 +19,7 @@ export function ExamLayout({ store }: { store: AttemptStore }) {
   const response = state.responses[item.attemptItemId]
   const previous = state.snapshot.items[state.currentItemIndex - 1]
   const next = state.snapshot.items[state.currentItemIndex + 1]
+  const nextAudio = next?.media.find((asset) => asset.kind === 'audio')
   const remaining = state.sectionExpiresAt ? clock.remainingMs(state.sectionExpiresAt) : null
   const timeLabel = remaining === null
     ? t('exam.practice')
@@ -28,6 +30,11 @@ export function ExamLayout({ store }: { store: AttemptStore }) {
     const timer = window.setInterval(() => setTick((value) => value + 1), 1_000)
     return () => window.clearInterval(timer)
   }, [state.sectionExpiresAt])
+
+  useEffect(() => {
+    const hasAudio = item.media.some((asset) => asset.kind === 'audio')
+    if (state.snapshot.mode === 'practice' || !hasAudio) setListeningUnlocked(true)
+  }, [item.attemptItemId, item.media, state.snapshot.mode])
 
   function closeNavigator() {
     setNavigatorOpen(false)
@@ -46,7 +53,15 @@ export function ExamLayout({ store }: { store: AttemptStore }) {
       </header>
       <div className="exam-body">
         <section className="exam-content">
-          <QuestionRenderer item={item} selectedId={response?.choiceId ?? null} onSelect={(id) => void store.answer(id)} />
+          <QuestionRenderer
+            item={item}
+            mode={state.snapshot.mode}
+            attemptId={state.snapshot.id}
+            nextAudio={nextAudio}
+            selectedId={response?.choiceId ?? null}
+            onSelect={(id) => void store.answer(id)}
+            onListeningStateChange={(listening) => setListeningUnlocked(listening.nextUnlocked)}
+          />
         </section>
         <AnswerNavigator
           items={state.snapshot.items}
@@ -63,7 +78,7 @@ export function ExamLayout({ store }: { store: AttemptStore }) {
       </div>
       <ExamFooter
         canPrevious={previous?.section === state.currentSection}
-        canNext={next?.section === state.currentSection}
+        canNext={next?.section === state.currentSection && listeningUnlocked}
         marked={response?.marked ?? false}
         onPrevious={store.previous}
         onNext={store.next}
