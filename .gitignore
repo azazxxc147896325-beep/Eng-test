@@ -1,4 +1,7 @@
 node_modules/
+node_modules
+node_modules.nosync/
+node_modules 2/
 dist/
 dev-dist/
 playwright-report/
@@ -8,3 +11,5 @@ test-results/
 !.env.example
 .DS_Store
 *.tsbuildinfo
+supabase/.branches/
+supabase/.temp/
