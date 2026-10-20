@@ -8,7 +8,9 @@
     "build": "tsc -b && vite build",
     "test": "vitest",
     "test:e2e": "playwright test",
-    "typecheck": "tsc -b --pretty false"
+    "typecheck": "tsc -b --pretty false",
+    "content:validate": "tsx scripts/validate-content.ts",
+    "content:import": "tsx scripts/import-content.ts"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.118.0",
@@ -32,6 +34,7 @@
     "@types/react-dom": "latest",
     "fake-indexeddb": "^6.2.6",
     "jsdom": "latest",
+    "tsx": "^4.23.15",
     "typescript": "latest",
     "vitest": "latest"
   }

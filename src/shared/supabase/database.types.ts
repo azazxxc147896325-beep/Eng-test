@@ -84,7 +84,7 @@ isOneToOne: false
                     "action"?: string,"actor_id"?: string | null,"after_data"?: Json | null,"before_data"?: Json | null,"created_at"?: string,"entity_id"?: string | null,"entity_type"?: string,"id"?: never
                   }
                   Relationships: [
-                    
+
                   ]
                 },"choices": {
                   Row: {
@@ -141,7 +141,7 @@ isOneToOne: false
                     "avatar_url"?: string | null,"created_at"?: string,"display_name"?: string | null,"id"?: string,"locale"?: string,"target_score"?: number,"updated_at"?: string
                   }
                   Relationships: [
-                    
+
                   ]
                 },"question_groups": {
                   Row: {
@@ -153,9 +153,7 @@ isOneToOne: false
                   Update: {
                     "approved_by"?: string | null,"created_at"?: string,"created_by"?: string,"difficulty"?: string,"group_type"?: string,"id"?: string,"part"?: number,"status"?: Database["public"]['Enums']["content_status"],"updated_at"?: string
                   }
-                  Relationships: [
-                    
-                  ]
+                  Relationships: []
                 },"question_versions": {
                   Row: {
                     "approved_by": string | null,"choice_shuffle_allowed": boolean,"content_hash": string,"created_at": string,"created_by": string,"difficulty": string,"group_id": string | null,"id": string,"prompt": NonNullable<Json>,"question_id": string,"skill_tags": (string)[],"solution": NonNullable<Json>,"status": Database["public"]['Enums']["content_status"],"version": number
@@ -191,9 +189,7 @@ isOneToOne: false
                   Update: {
                     "created_at"?: string,"created_by"?: string,"id"?: string,"part"?: number
                   }
-                  Relationships: [
-                    
-                  ]
+                  Relationships: []
                 },"responses": {
                   Row: {
                     "answered_at": string,"attempt_id": string,"attempt_item_id": string,"choice_id": string | null,"id": string,"marked": boolean,"user_id": string
@@ -273,9 +269,7 @@ isOneToOne: true
                   Update: {
                     "active"?: boolean,"created_at"?: string,"definition"?: NonNullable<Json>,"id"?: string,"mode"?: Database["public"]['Enums']["exam_mode"],"name"?: string,"version"?: number
                   }
-                  Relationships: [
-                    
-                  ]
+                  Relationships: []
                 },"translations": {
                   Row: {
                     "explanation": string,"id": string,"locale": string,"prompt_translation": string | null,"question_version_id": string,"status": Database["public"]['Enums']["content_status"],"transcript": string | null
@@ -311,7 +305,12 @@ isOneToOne: false
                 }
           }
           Views: {
-            [_ in never]: never
+            "content_pool_coverage": {
+                  Row: {
+                    "complete_groups": number | null,"draft_groups": number | null,"part": number | null,"published_questions": number | null,"review_groups": number | null
+                  }
+                  Relationships: []
+                }
           }
           Functions: {
             "create_attempt_snapshot":
@@ -322,6 +321,9 @@ isOneToOne: false
                            },
 "submit_attempt":
 { Args: { "p_attempt_id": string,"p_scoring_version": string,"p_user_id": string }; Returns: string
+                           },
+"transition_question_version":
+{ Args: { "p_notes"?: string,"p_question_version_id": string,"p_target_status": Database["public"]['Enums']["content_status"] }; Returns: Database["public"]['Enums']["content_status"]
                            }
           }
           Enums: {

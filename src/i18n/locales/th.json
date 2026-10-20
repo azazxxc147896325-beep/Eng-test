@@ -82,5 +82,24 @@
     "progressTable": "ตารางคะแนน Full Test ที่ยืนยันเวลาแล้ว",
     "date": "วันที่",
     "points": "คะแนน"
+  },
+  "admin": {
+    "dashboard": "คลังข้อสอบ",
+    "reviewQueue": "คิวตรวจ",
+    "import": "นำเข้าข้อสอบ",
+    "editor": "แก้ไขข้อสอบ",
+    "status": "สถานะ",
+    "saveDraft": "บันทึก Draft",
+    "submitReview": "ส่งตรวจ",
+    "approve": "อนุมัติ",
+    "publish": "เผยแพร่",
+    "retire": "เลิกใช้",
+    "fullEquivalent": "ประกอบ Full Test ไม่ซ้ำได้ {{count}} ชุด",
+    "published": "ข้อที่เผยแพร่",
+    "completeGroups": "กลุ่มที่สมบูรณ์",
+    "emptyQueue": "ยังไม่มีข้อสอบรอตรวจ",
+    "validate": "ตรวจไฟล์",
+    "valid": "ข้อมูลถูกต้อง พร้อมนำเข้า",
+    "invalid": "ข้อมูลไม่ถูกต้อง กรุณาตรวจ schema"
   }
 }

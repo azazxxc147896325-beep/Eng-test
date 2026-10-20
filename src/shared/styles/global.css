@@ -127,6 +127,18 @@ h1 { max-width: 15ch; margin: 14px 0 18px; font-size: clamp(2.25rem, 6vw, 4.75re
 .progress-chart table { width: 100%; margin-top: 18px; border-collapse: collapse; color: var(--navy-900); }
 .progress-chart caption { margin-bottom: 8px; font-weight: 800; text-align: left; }
 .progress-chart th, .progress-chart td { padding: 10px; border-bottom: 1px solid var(--slate-200); text-align: left; }
+.admin-layout { min-height: calc(100dvh - 144px); display: grid; grid-template-columns: 220px minmax(0, 1fr); width: min(1240px, calc(100% - 32px)); margin: 0 auto; }
+.admin-layout > aside { display: grid; align-content: start; gap: 8px; padding: 22px; border: 1px solid var(--slate-200); border-radius: var(--radius-md); background: var(--white); }
+.admin-layout > aside h1 { font-size: 1.2rem; }
+.admin-layout > aside a { min-height: 44px; display: flex; align-items: center; padding: 0 12px; border-radius: 10px; }
+.admin-layout > aside a.active { color: var(--blue-700); background: var(--blue-100); font-weight: 800; }
+.admin-page { min-width: 0; padding: 12px 24px 96px; }
+.admin-page > h1 { max-width: none; font-size: clamp(2rem, 5vw, 3.25rem); }
+.admin-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; }
+.admin-card { padding: 20px; border: 1px solid var(--slate-200); border-radius: var(--radius-md); background: var(--white); }
+.admin-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+.admin-actions button, .admin-page > button { min-height: 44px; padding: 0 16px; border: 0; border-radius: 10px; color: var(--white); background: var(--blue-600); font-weight: 800; }
+.admin-page textarea { width: 100%; min-height: 280px; display: block; margin-bottom: 12px; padding: 14px; border: 1px solid var(--slate-200); border-radius: 12px; font: .9rem ui-monospace, monospace; }
 
 .bottom-nav {
   position: fixed;
@@ -152,6 +164,9 @@ h1 { max-width: 15ch; margin: 14px 0 18px; font-size: clamp(2.25rem, 6vw, 4.75re
   .streak { display: none; }
   .home-grid, .mode-grid { grid-template-columns: 1fr; }
   .results-page { grid-template-columns: 1fr; overflow: auto; }
+  .admin-layout { grid-template-columns: 1fr; }
+  .admin-layout > aside { grid-auto-flow: column; overflow-x: auto; padding: 8px; }
+  .admin-layout > aside h1 { display: none; }
   .hero { min-height: 380px; text-align: center; justify-content: center; }
   .score-row { justify-content: center; }
   .mode-card { min-height: 210px; }

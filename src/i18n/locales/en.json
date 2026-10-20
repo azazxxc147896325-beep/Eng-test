@@ -82,5 +82,24 @@
     "progressTable": "Verified Full Test score table",
     "date": "Date",
     "points": "points"
+  },
+  "admin": {
+    "dashboard": "Question bank",
+    "reviewQueue": "Review queue",
+    "import": "Import content",
+    "editor": "Question editor",
+    "status": "Status",
+    "saveDraft": "Save draft",
+    "submitReview": "Submit for review",
+    "approve": "Approve",
+    "publish": "Publish",
+    "retire": "Retire",
+    "fullEquivalent": "{{count}} non-repeating Full Test equivalent(s)",
+    "published": "Published questions",
+    "completeGroups": "Complete groups",
+    "emptyQueue": "No content is waiting for review.",
+    "validate": "Validate file",
+    "valid": "Content is valid and ready to import.",
+    "invalid": "Content is invalid. Check the schema."
   }
 }

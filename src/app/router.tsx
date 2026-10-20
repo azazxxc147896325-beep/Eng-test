@@ -10,10 +10,10 @@ import { ExamPage } from '../exam/ui/ExamPage'
 import { ResultsPage } from '../results/ResultsPage'
 import { ReviewPage } from '../results/ReviewPage'
 import { HistoryPage } from '../results/HistoryPage'
-
-function Placeholder({ title }: { title: string }) {
-  return <main className="page"><h1>{title}</h1></main>
-}
+import { AdminLayout } from '../admin/AdminLayout'
+import { DashboardPage } from '../admin/DashboardPage'
+import { ReviewQueuePage } from '../admin/ReviewQueuePage'
+import { ImportPage } from '../admin/ImportPage'
 
 export const router = createBrowserRouter([
   { path: '/login', element: <LoginPage /> },
@@ -32,7 +32,12 @@ export const router = createBrowserRouter([
       { path: 'history', element: <RequireUser><HistoryPage /></RequireUser> },
       {
         path: 'admin',
-        element: <RequireRole role="admin"><Placeholder title="Admin" /></RequireRole>,
+        element: <RequireRole role={['admin', 'reviewer']}><AdminLayout /></RequireRole>,
+        children: [
+          { index: true, element: <DashboardPage /> },
+          { path: 'review', element: <ReviewQueuePage /> },
+          { path: 'import', element: <RequireRole role="admin"><ImportPage /></RequireRole> },
+        ],
       },
     ],
   },
