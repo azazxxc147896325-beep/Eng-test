@@ -14,6 +14,7 @@ import { AdminLayout } from '../admin/AdminLayout'
 import { DashboardPage } from '../admin/DashboardPage'
 import { ReviewQueuePage } from '../admin/ReviewQueuePage'
 import { ImportPage } from '../admin/ImportPage'
+import { GenerateQuestionsPanel } from '../admin/GenerateQuestionsPanel'
 
 export const router = createBrowserRouter([
   { path: '/login', element: <LoginPage /> },
@@ -36,6 +37,7 @@ export const router = createBrowserRouter([
         children: [
           { index: true, element: <DashboardPage /> },
           { path: 'review', element: <ReviewQueuePage /> },
+          { path: 'generate', element: <GenerateQuestionsPanel /> },
           { path: 'import', element: <RequireRole role="admin"><ImportPage /></RequireRole> },
         ],
       },

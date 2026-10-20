@@ -1,5 +1,6 @@
 export function corsHeaders(request: Request) {
-  const configuredOrigin = Deno.env.get('APP_ORIGIN') ?? 'http://127.0.0.1:4173'
+  let configuredOrigin = 'http://127.0.0.1:4173'
+  try { configuredOrigin = Deno.env.get('APP_ORIGIN') ?? configuredOrigin } catch { /* Tests run without env permission. */ }
   const requestOrigin = request.headers.get('origin')
   return {
     'Access-Control-Allow-Origin': requestOrigin === configuredOrigin ? requestOrigin : configuredOrigin,

@@ -100,6 +100,15 @@
     "emptyQueue": "No content is waiting for review.",
     "validate": "Validate file",
     "valid": "Content is valid and ready to import.",
-    "invalid": "Content is invalid. Check the schema."
+    "invalid": "Content is invalid. Check the schema.",
+    "generate": "Generate with AI",
+    "generateHint": "AI output stays in preview until you explicitly save it as a draft.",
+    "count": "Groups",
+    "difficulty": "Difficulty",
+    "topic": "Topic",
+    "generatePreview": "Generate preview",
+    "generateError": "Question generation failed",
+    "draftSaved": "Draft saved",
+    "saveError": "Draft save failed"
   }
 }

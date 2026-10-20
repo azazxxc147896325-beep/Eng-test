@@ -100,6 +100,15 @@
     "emptyQueue": "ยังไม่มีข้อสอบรอตรวจ",
     "validate": "ตรวจไฟล์",
     "valid": "ข้อมูลถูกต้อง พร้อมนำเข้า",
-    "invalid": "ข้อมูลไม่ถูกต้อง กรุณาตรวจ schema"
+    "invalid": "ข้อมูลไม่ถูกต้อง กรุณาตรวจ schema",
+    "generate": "สร้างข้อสอบด้วย AI",
+    "generateHint": "AI สร้างเฉพาะ Draft และจะไม่บันทึกจนกดบันทึกเอง",
+    "count": "จำนวนชุด",
+    "difficulty": "ระดับ",
+    "topic": "หัวข้อ",
+    "generatePreview": "สร้างตัวอย่าง",
+    "generateError": "สร้างข้อสอบไม่สำเร็จ",
+    "draftSaved": "บันทึก Draft แล้ว",
+    "saveError": "บันทึก Draft ไม่สำเร็จ"
   }
 }

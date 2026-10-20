@@ -324,6 +324,9 @@ isOneToOne: false
                            },
 "transition_question_version":
 { Args: { "p_notes"?: string,"p_question_version_id": string,"p_target_status": Database["public"]['Enums']["content_status"] }; Returns: Database["public"]['Enums']["content_status"]
+                           },
+"save_generated_content_draft":
+{ Args: { "p_draft": Json }; Returns: string
                            }
           }
           Enums: {
