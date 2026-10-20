@@ -107,6 +107,11 @@
     "difficulty": "Difficulty",
     "topic": "Topic",
     "generatePreview": "Generate preview",
+    "question": "Question",
+    "correctAnswer": "Correct answer",
+    "promptTranslation": "Question translation",
+    "thaiExplanation": "Thai explanation",
+    "englishExplanation": "English explanation",
     "generateError": "Question generation failed",
     "draftSaved": "Draft saved",
     "saveError": "Draft save failed"

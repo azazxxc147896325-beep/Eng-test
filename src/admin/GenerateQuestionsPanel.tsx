@@ -8,6 +8,12 @@ export type GeneratedDraft = { status: 'draft'; content: ContentDraft }
 type GenerateInput = { part: number; count: number; difficulty: 'easy' | 'medium' | 'hard'; skills: string[]; topic: string }
 type Props = { generate?: (input: GenerateInput) => Promise<GeneratedDraft[]>; saveDraft?: (draft: ContentDraft) => Promise<unknown> }
 
+function contentText(value: unknown) {
+  if (typeof value === 'string') return value
+  if (value && typeof value === 'object' && 'text' in value && typeof value.text === 'string') return value.text
+  return JSON.stringify(value, null, 2)
+}
+
 async function generateWithCloud(input: GenerateInput) {
   const { data, error } = await getBrowserClient().functions.invoke('generate-question', { body: input })
   if (error) throw error
@@ -42,7 +48,24 @@ export function GenerateQuestionsPanel({ generate = generateWithCloud, saveDraft
     </div>
     {message && <p role="status">{message}</p>}
     <section className="admin-grid">{drafts.map((draft, index) => <article className="admin-card" key={`${draft.content.groupId}-${index}`}>
-      <h2>Part {draft.content.part} · {draft.status}</h2><pre>{JSON.stringify(draft.content.questions[0]?.prompt, null, 2)}</pre>
+      <h2>Part {draft.content.part} · {draft.status}</h2>
+      <p>{draft.content.groupType} · {draft.content.difficulty}</p>
+      <div className="draft-preview">{draft.content.questions.map((question, questionIndex) => <section className="draft-question" key={question.id}>
+        <h3>{t('admin.question')} {questionIndex + 1}</h3>
+        <p className="draft-prompt">{contentText(question.prompt)}</p>
+        <ol className="draft-choices">
+          {question.choices.map((choice) => <li
+            aria-label={choice.correct ? `${t('admin.correctAnswer')}: ${choice.label}. ${contentText(choice.content)}` : undefined}
+            className={choice.correct ? 'correct-choice' : undefined}
+            key={choice.id}
+          >{choice.label}. {contentText(choice.content)}{choice.correct && <strong> — {t('admin.correctAnswer')}</strong>}</li>)}
+        </ol>
+        {question.translations.th.promptTranslation && <p><strong>{t('admin.promptTranslation')}:</strong> {question.translations.th.promptTranslation}</p>}
+        <div className="draft-explanations">
+          <p><strong>{t('admin.thaiExplanation')}:</strong> {question.translations.th.explanation}</p>
+          <p><strong>{t('admin.englishExplanation')}:</strong> {question.translations.en.explanation}</p>
+        </div>
+      </section>)}</div>
       <button disabled={busy} onClick={() => onSave(draft.content)}>{t('admin.saveDraft')}</button>
     </article>)}</section>
   </main>
