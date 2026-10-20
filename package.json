@@ -19,7 +19,8 @@
     "react-i18next": "^17.1.0",
     "react-router-dom": "latest",
     "vite": "latest",
-    "vite-plugin-pwa": "^2.0.0"
+    "vite-plugin-pwa": "^2.0.0",
+    "zod": "^4.6.7"
   },
   "devDependencies": {
     "@playwright/test": "latest",
