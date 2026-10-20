@@ -87,7 +87,7 @@ export class GeminiQuestionProvider implements AIQuestionProvider {
         body: JSON.stringify({
           contents: [{ role: 'user', parts: [{ text: buildGenerationPrompt(request) }] }],
           generationConfig: {
-            responseFormat: { text: { mimeType: 'application/json', schema: responseSchema(request) } },
+            responseFormat: { text: { mimeType: 'APPLICATION_JSON', schema: responseSchema(request) } },
             temperature: 0.8,
           },
         }),
