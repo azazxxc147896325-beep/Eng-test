@@ -32,5 +32,18 @@
     "label": "Language",
     "thai": "ไทย",
     "english": "English"
+  },
+  "auth": {
+    "title": "Sign in to track your progress",
+    "detail": "Save scores, find weak parts, and compare every attempt.",
+    "google": "Continue with Google",
+    "signIn": "Sign in",
+    "signOut": "Sign out",
+    "loading": "Checking your account…",
+    "finishing": "Finishing sign-in…",
+    "notAuthorized": "Not authorized to view this page",
+    "loginError": "Sign-in failed. Please try again.",
+    "callbackError": "Could not finish signing in.",
+    "tryAgain": "Try signing in again"
   }
 }
