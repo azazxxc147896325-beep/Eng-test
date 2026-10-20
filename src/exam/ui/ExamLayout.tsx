@@ -1,0 +1,74 @@
+import { useEffect, useMemo, useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import type { AttemptStore } from '../session/useAttemptStore'
+import { useAttemptStore } from '../session/useAttemptStore'
+import { AnswerNavigator } from './AnswerNavigator'
+import { ExamFooter } from './ExamFooter'
+import { QuestionRenderer } from './QuestionRenderer'
+import { createServerClock } from '../session/clock'
+
+export function ExamLayout({ store }: { store: AttemptStore }) {
+  const { t } = useTranslation()
+  const state = useAttemptStore(store)
+  const [navigatorOpen, setNavigatorOpen] = useState(false)
+  const [, setTick] = useState(0)
+  const navigatorButton = useRef<HTMLButtonElement>(null)
+  const clock = useMemo(() => createServerClock(state.snapshot.serverNow), [state.snapshot.serverNow])
+  const item = state.snapshot.items[state.currentItemIndex]
+  const response = state.responses[item.attemptItemId]
+  const previous = state.snapshot.items[state.currentItemIndex - 1]
+  const next = state.snapshot.items[state.currentItemIndex + 1]
+  const remaining = state.sectionExpiresAt ? clock.remainingMs(state.sectionExpiresAt) : null
+  const timeLabel = remaining === null
+    ? t('exam.practice')
+    : `${String(Math.floor(remaining / 60_000)).padStart(2, '0')}:${String(Math.floor(remaining / 1_000) % 60).padStart(2, '0')}`
+
+  useEffect(() => {
+    if (!state.sectionExpiresAt) return
+    const timer = window.setInterval(() => setTick((value) => value + 1), 1_000)
+    return () => window.clearInterval(timer)
+  }, [state.sectionExpiresAt])
+
+  function closeNavigator() {
+    setNavigatorOpen(false)
+    requestAnimationFrame(() => navigatorButton.current?.focus())
+  }
+
+  return (
+    <main className="exam-page">
+      <header className="exam-header">
+        <strong><span>SCORE</span> QUEST</strong>
+        <div><b>Part {item.part}</b><small>{t('exam.questionOf', { current: item.ordinal, total: state.snapshot.items.length })}</small></div>
+        <div className="exam-header-actions">
+          <span className="timer" aria-label={state.sectionExpiresAt ? t('exam.timed') : t('exam.practice')}>{timeLabel}</span>
+          <button ref={navigatorButton} className="navigator-trigger" type="button" onClick={() => setNavigatorOpen(true)}>{t('exam.questions')}</button>
+        </div>
+      </header>
+      <div className="exam-body">
+        <section className="exam-content">
+          <QuestionRenderer item={item} selectedId={response?.choiceId ?? null} onSelect={(id) => void store.answer(id)} />
+        </section>
+        <AnswerNavigator
+          items={state.snapshot.items}
+          currentIndex={state.currentItemIndex}
+          responses={state.responses}
+          onSelect={(index) => {
+            if (state.snapshot.items[index]?.section !== state.currentSection) return
+            while (store.getState().currentItemIndex < index) store.next()
+            while (store.getState().currentItemIndex > index) store.previous()
+          }}
+          mobileOpen={navigatorOpen}
+          onClose={closeNavigator}
+        />
+      </div>
+      <ExamFooter
+        canPrevious={previous?.section === state.currentSection}
+        canNext={next?.section === state.currentSection}
+        marked={response?.marked ?? false}
+        onPrevious={store.previous}
+        onNext={store.next}
+        onMark={() => void store.toggleMark()}
+      />
+    </main>
+  )
+}

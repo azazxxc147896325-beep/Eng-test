@@ -45,5 +45,17 @@
     "loginError": "Sign-in failed. Please try again.",
     "callbackError": "Could not finish signing in.",
     "tryAgain": "Try signing in again"
+  },
+  "exam": {
+    "loading": "Loading exam…",
+    "loadError": "Could not load the exam",
+    "questions": "Questions",
+    "questionOf": "Question {{current}} of {{total}}",
+    "previous": "Previous",
+    "next": "Next",
+    "mark": "Mark",
+    "close": "Close",
+    "timed": "Timed",
+    "practice": "Practice"
   }
 }

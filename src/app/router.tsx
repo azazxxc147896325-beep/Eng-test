@@ -6,6 +6,7 @@ import { AuthCallbackPage } from '../auth/AuthCallbackPage'
 import { LoginPage } from '../auth/LoginPage'
 import { RequireRole } from './RequireRole'
 import { RequireUser } from './RequireUser'
+import { ExamPage } from '../exam/ui/ExamPage'
 
 function Placeholder({ title }: { title: string }) {
   return <main className="page"><h1>{title}</h1></main>
@@ -14,6 +15,7 @@ function Placeholder({ title }: { title: string }) {
 export const router = createBrowserRouter([
   { path: '/login', element: <LoginPage /> },
   { path: '/auth/callback', element: <AuthCallbackPage /> },
+  { path: '/attempt/:attemptId', element: <RequireUser><ExamPage /></RequireUser> },
   {
     path: '/',
     element: <AppShell />,
