@@ -13,5 +13,5 @@ export function QuestionEditorRoutePage() {
   useEffect(() => { void getAdminRepository().getQuestion(questionVersionId).then((found) => { if (found) setItem(found); else setError(t('admin.notFound')) }).catch(() => setError(t('admin.loadError'))) }, [questionVersionId, t])
   if (error) return <main className="admin-page"><p role="alert">{error}</p></main>
   if (!item || !user) return <main className="admin-page" role="status">{t('admin.loading')}</main>
-  return <QuestionEditorPage draft={{ id: item.id, createdBy: item.createdBy, status: item.status, part: item.part, prompt: item.prompt, promptData: item.promptData }} currentUserId={user.id} roles={roles} repository={new SupabaseContentRepository(getBrowserClient())} />
+  return <QuestionEditorPage draft={{ id: item.id, createdBy: item.createdBy, status: item.status, part: item.part, prompt: item.prompt, promptData: item.promptData, choices: item.choices, translations: item.translations }} currentUserId={user.id} roles={roles} repository={new SupabaseContentRepository(getBrowserClient())} />
 }
