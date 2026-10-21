@@ -333,6 +333,9 @@ isOneToOne: false
                            },
 "set_user_staff_role":
 { Args: { "p_role": Database["public"]['Enums']["app_role"],"p_user_id": string }; Returns: undefined
+                           },
+"update_question_draft":
+{ Args: { "p_payload": Json,"p_question_version_id": string }; Returns: undefined
                            }
           }
           Enums: {

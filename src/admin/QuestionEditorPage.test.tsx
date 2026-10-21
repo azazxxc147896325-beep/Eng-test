@@ -60,4 +60,25 @@ describe('QuestionEditorPage', () => {
       translations: expect.objectContaining({ th: expect.objectContaining({ explanation: 'คำอธิบายใหม่' }) }),
     }))
   })
+
+  it('does not save when a choice is empty', () => {
+    const repository = { saveDraft: vi.fn(), submitForReview: vi.fn(), approve: vi.fn(), publish: vi.fn(), retire: vi.fn() }
+    render(<I18nextProvider i18n={i18n}><QuestionEditorPage
+      draft={{
+        id: 'version-2', createdBy: 'user-1', status: 'draft', part: 5, prompt: 'Prompt',
+        choices: [
+          { id: 'a', label: 'A', text: 'at', correct: true },
+          { id: 'b', label: 'B', text: '', correct: false },
+          { id: 'c', label: 'C', text: 'in', correct: false },
+          { id: 'd', label: 'D', text: 'by', correct: false },
+        ],
+        translations: { th: { promptTranslation: 'คำแปล', explanation: 'อธิบาย' }, en: { promptTranslation: '', explanation: 'Explanation' } },
+      }}
+      currentUserId="user-1" roles={['admin']} repository={repository}
+    /></I18nextProvider>)
+
+    fireEvent.click(screen.getAllByRole('button', { name: /บันทึก Draft|save draft/i }).at(-1)!)
+    expect(repository.saveDraft).not.toHaveBeenCalled()
+    expect(screen.getByRole('alert')).toHaveTextContent(/กรอกข้อมูล|complete all/i)
+  })
 })

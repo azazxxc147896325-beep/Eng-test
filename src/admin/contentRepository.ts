@@ -28,7 +28,11 @@ export class SupabaseContentRepository implements ContentRepository {
     const prompt = draft.promptData && typeof draft.promptData === 'object' && !Array.isArray(draft.promptData)
       ? { ...draft.promptData, text: draft.prompt }
       : { text: draft.prompt }
-    const { error } = await this.client.from('question_versions').update({ prompt }).eq('id', draft.id).eq('status', 'draft')
+    const translations = draft.translations ? {
+      th: { promptTranslation: draft.translations.th.promptTranslation, explanation: draft.translations.th.explanation, ...(draft.translations.th.transcript ? { transcript: draft.translations.th.transcript } : {}) },
+      en: { promptTranslation: draft.translations.en.promptTranslation, explanation: draft.translations.en.explanation, ...(draft.translations.en.transcript ? { transcript: draft.translations.en.transcript } : {}) },
+    } : null
+    const { error } = await this.client.rpc('update_question_draft', { p_question_version_id: draft.id, p_payload: { prompt, choices: draft.choices ?? [], translations } })
     if (error) throw error
   }
   private async transition(id: string, status: ContentStatus) {

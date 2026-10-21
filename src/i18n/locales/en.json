@@ -162,6 +162,7 @@
     "promptLabel": "Question prompt",
     "choiceLabel": "Choice {{label}}",
     "correctChoiceLabel": "Correct answer {{label}}",
-    "translations": "Translations and explanations"
+    "translations": "Translations and explanations",
+    "editorIncomplete": "Complete all fields and choose exactly one correct answer"
   }
 }

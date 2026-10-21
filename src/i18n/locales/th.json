@@ -162,6 +162,7 @@
     "promptLabel": "โจทย์ / Prompt",
     "choiceLabel": "ตัวเลือก {{label}}",
     "correctChoiceLabel": "คำตอบที่ถูก {{label}}",
-    "translations": "คำแปลและคำอธิบาย"
+    "translations": "คำแปลและคำอธิบาย",
+    "editorIncomplete": "กรอกข้อมูลให้ครบ และเลือกคำตอบที่ถูก 1 ข้อ"
   }
 }
