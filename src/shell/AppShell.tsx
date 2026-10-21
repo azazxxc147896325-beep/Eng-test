@@ -5,13 +5,14 @@ import { useAuth } from '../auth/AuthProvider'
 
 export function AppShell() {
   const { t } = useTranslation()
-  const { user, loading, signOut } = useAuth()
+  const { user, roles, loading, signOut } = useAuth()
   return (
     <div className="app-shell">
       <header className="topbar">
         <NavLink to="/home" className="brand"><span className="brand-mark">SCORE</span> QUEST</NavLink>
         <div className="topbar-actions">
           <span className="streak">🔥 {t('home.streak')}</span>
+          {roles.includes('admin') && <NavLink className="admin-entry" to="/admin">Admin</NavLink>}
           {!loading && (user
             ? <button className="account-link" onClick={() => void signOut()}>{t('auth.signOut')}</button>
             : <NavLink className="account-link" to="/login">{t('auth.signIn')}</NavLink>)}

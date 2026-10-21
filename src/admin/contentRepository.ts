@@ -1,8 +1,8 @@
 import type { SupabaseClient } from '@supabase/supabase-js'
-import type { Database } from '../shared/supabase/database.types'
+import type { Database, Json } from '../shared/supabase/database.types'
 
 export type ContentStatus = Database['public']['Enums']['content_status']
-export type EditorDraft = { id: string; createdBy: string; status: ContentStatus; part: number; prompt: string }
+export type EditorDraft = { id: string; createdBy: string; status: ContentStatus; part: number; prompt: string; promptData?: Json }
 export interface ContentRepository {
   saveDraft(draft: EditorDraft): Promise<void>
   submitForReview(id: string): Promise<void>
@@ -14,7 +14,10 @@ export interface ContentRepository {
 export class SupabaseContentRepository implements ContentRepository {
   constructor(private readonly client: SupabaseClient<Database>) {}
   async saveDraft(draft: EditorDraft) {
-    const { error } = await this.client.from('question_versions').update({ prompt: { text: draft.prompt } }).eq('id', draft.id).eq('status', 'draft')
+    const prompt = draft.promptData && typeof draft.promptData === 'object' && !Array.isArray(draft.promptData)
+      ? { ...draft.promptData, text: draft.prompt }
+      : { text: draft.prompt }
+    const { error } = await this.client.from('question_versions').update({ prompt }).eq('id', draft.id).eq('status', 'draft')
     if (error) throw error
   }
   private async transition(id: string, status: ContentStatus) {

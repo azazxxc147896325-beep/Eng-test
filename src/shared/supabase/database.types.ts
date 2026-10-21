@@ -327,6 +327,12 @@ isOneToOne: false
                            },
 "save_generated_content_draft":
 { Args: { "p_draft": Json }; Returns: string
+                           },
+"save_content_drafts":
+{ Args: { "p_drafts": Json }; Returns: number
+                           },
+"set_user_staff_role":
+{ Args: { "p_role": Database["public"]['Enums']["app_role"],"p_user_id": string }; Returns: undefined
                            }
           }
           Enums: {

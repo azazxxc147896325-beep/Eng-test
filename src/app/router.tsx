@@ -15,6 +15,9 @@ import { DashboardPage } from '../admin/DashboardPage'
 import { ReviewQueuePage } from '../admin/ReviewQueuePage'
 import { ImportPage } from '../admin/ImportPage'
 import { GenerateQuestionsPanel } from '../admin/GenerateQuestionsPanel'
+import { QuestionBankPage } from '../admin/QuestionBankPage'
+import { QuestionEditorRoutePage } from '../admin/QuestionEditorRoutePage'
+import { UserManagementRoutePage } from '../admin/UserManagementRoutePage'
 import { routerBasePath } from './basePath'
 
 export const router = createBrowserRouter([
@@ -34,12 +37,15 @@ export const router = createBrowserRouter([
       { path: 'history', element: <RequireUser><HistoryPage /></RequireUser> },
       {
         path: 'admin',
-        element: <RequireRole role={['admin', 'reviewer']}><AdminLayout /></RequireRole>,
+        element: <RequireRole role="admin"><AdminLayout /></RequireRole>,
         children: [
           { index: true, element: <DashboardPage /> },
+          { path: 'questions', element: <QuestionBankPage /> },
+          { path: 'questions/:questionVersionId', element: <QuestionEditorRoutePage /> },
           { path: 'review', element: <ReviewQueuePage /> },
           { path: 'generate', element: <GenerateQuestionsPanel /> },
           { path: 'import', element: <RequireRole role="admin"><ImportPage /></RequireRole> },
+          { path: 'users', element: <UserManagementRoutePage /> },
         ],
       },
     ],

@@ -34,3 +34,14 @@ test('regular users cannot open content administration', async ({ page }) => {
   await page.goto('/admin')
   await expect(page.getByText(/ไม่มีสิทธิ์|not authorized/i)).toBeVisible()
 })
+
+test('admin import stays within phone, iPad, and desktop viewports', async ({ page }) => {
+  await mockUser(page, ['user', 'admin'])
+  for (const viewport of [{ width: 320, height: 640 }, { width: 768, height: 1024 }, { width: 1440, height: 900 }]) {
+    await page.setViewportSize(viewport)
+    await page.goto('/admin/import')
+    await expect(page.getByRole('heading', { name: /นำเข้าข้อสอบ|import content/i })).toBeVisible()
+    const size = await page.evaluate(() => ({ width: document.documentElement.scrollWidth, viewport: window.innerWidth }))
+    expect(size.width).toBeLessThanOrEqual(size.viewport)
+  }
+})

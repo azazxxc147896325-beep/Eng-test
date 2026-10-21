@@ -21,6 +21,7 @@
     "react-dom": "latest",
     "react-i18next": "^17.1.0",
     "react-router-dom": "latest",
+    "read-excel-file": "^6.0.3",
     "vite": "latest",
     "vite-plugin-pwa": "^2.0.0",
     "zod": "^4.6.7"

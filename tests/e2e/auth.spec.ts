@@ -49,7 +49,7 @@ test('recovers a callback, returns to the intended page, and signs out', async (
   )
 
   await page.goto('/auth/callback')
-  await expect(page).toHaveURL(/\/results$/)
+  await expect(page).toHaveURL(/\/history$/)
   await page.getByRole('button', { name: /ออกจากระบบ|sign out/i }).click()
   await expect(page).toHaveURL(/\/login$/)
   await expect(page.getByRole('button', { name: /Google/i })).toBeVisible()

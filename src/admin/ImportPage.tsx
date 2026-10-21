@@ -1,17 +1,22 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ContentDraftSchema } from './contentSchema'
+import type { ContentDraft } from './contentSchema'
+import { parseImportText, spreadsheetRowsToDrafts } from './importParser'
+import { getBrowserClient } from '../shared/supabase/browser'
+import type { Json } from '../shared/supabase/database.types'
 
-export function ImportPage() {
-  const { t } = useTranslation(); const [text, setText] = useState(''); const [message, setMessage] = useState('')
+async function saveWithCloud(drafts: ContentDraft[]) { const { error } = await getBrowserClient().rpc('save_content_drafts', { p_drafts: drafts as Json }); if (error) throw error }
+
+export function ImportPage({ saveDrafts = saveWithCloud }: { saveDrafts?: (drafts: ContentDraft[]) => Promise<unknown> }) {
+  const { t } = useTranslation(); const [text, setText] = useState(''); const [message, setMessage] = useState(''); const [drafts, setDrafts] = useState<ContentDraft[]>([]); const [busy, setBusy] = useState(false)
   function validate() {
-    try {
-      const valid = text.split(/\r?\n/).filter(Boolean).every((line) => ContentDraftSchema.safeParse(JSON.parse(line)).success)
-      setMessage(valid ? t('admin.valid') : t('admin.invalid'))
-    } catch { setMessage(t('admin.invalid')) }
+    if (text.length > 5_000_000) { setDrafts([]); setMessage(t('admin.fileTooLarge')); return }
+    try { const parsed = parseImportText(text, text.trim().startsWith('[') ? 'json' : 'jsonl'); setDrafts(parsed); setMessage(parsed.length ? t('admin.valid') : t('admin.invalid')) } catch (error) { setDrafts([]); setMessage(`${t('admin.invalid')}: ${(error as Error).message}`) }
   }
-  return <main className="admin-page"><h1>{t('admin.import')}</h1><textarea value={text} onChange={(event) => setText(event.target.value)} aria-label="JSONL" />
-    <button onClick={validate}>{t('admin.validate')}</button>
-    {message && <p role="status">{message}</p>}
+  async function chooseFile(file?: File) { if (!file) return; if (file.size > 5_000_000) { setMessage(t('admin.fileTooLarge')); return } try { const extension = file.name.split('.').pop()?.toLowerCase(); if (!extension || !['xlsx', 'csv', 'json', 'jsonl'].includes(extension)) throw new Error(t('admin.unsupportedFile')); const parsed = extension === 'xlsx' ? spreadsheetRowsToDrafts(await (await import('read-excel-file')).default(file) as unknown[][]) : parseImportText(await file.text(), extension as 'csv' | 'json' | 'jsonl'); setDrafts(parsed); setMessage(`${t('admin.valid')} ${parsed.length}`) } catch (error) { setDrafts([]); setMessage(`${t('admin.invalid')}: ${(error as Error).message}`) } }
+  async function saveAll() { setBusy(true); try { await saveDrafts(drafts); setMessage(t('admin.savedCount', { count: drafts.length })); setDrafts([]) } catch { setMessage(t('admin.saveError')) } finally { setBusy(false) } }
+  return <main className="admin-page"><header className="admin-heading"><div><h1>{t('admin.import')}</h1><p>{t('admin.importHint')}</p></div></header><section className="admin-card import-card"><label className="dropzone">⇧<strong>{t('admin.chooseFile')}</strong><span>{t('admin.fileSupport')}</span><input aria-label={t('admin.chooseFile')} type="file" accept=".xlsx,.csv,.json,.jsonl" onChange={(event) => void chooseFile(event.target.files?.[0])} /></label><p className="admin-note">{t('admin.rightsNote')}</p></section>
+    <details className="admin-card" open><summary>{t('admin.manualPaste')}</summary><textarea maxLength={5_000_000} value={text} onChange={(event) => setText(event.target.value)} aria-label="JSONL" /><button onClick={validate}>{t('admin.validate')}</button></details>
+    {message && <p role="status">{message}</p>}{drafts.length > 0 && <section className="admin-card"><h2>{t('admin.preview', { count: drafts.length })}</h2>{drafts.slice(0, 5).map((draft) => <p key={draft.groupId}><strong>Part {draft.part}</strong> · {draft.difficulty} · {draft.questions.length} {t('admin.question')}</p>)}<button disabled={busy} onClick={() => void saveAll()}>{t('admin.saveAll')}</button></section>}
   </main>
 }
