@@ -7,12 +7,17 @@ declare
   v_choice_count integer;
   v_updated integer;
 begin
+  if octet_length(p_payload::text) > 250000 then
+    raise exception using errcode = '22023', message = 'Draft payload is too large';
+  end if;
   select * into v_version from public.question_versions where id = p_question_version_id for update;
   if not found then raise exception using errcode = 'P0002', message = 'Question version not found'; end if;
   if v_actor is null or v_version.created_by <> v_actor or v_version.status <> 'draft' then
     raise exception using errcode = '42501', message = 'Only the creator can edit a draft';
   end if;
-  if jsonb_typeof(p_payload->'prompt') <> 'object' or coalesce(btrim(p_payload->'prompt'->>'text'), '') = '' then
+  if jsonb_typeof(p_payload->'prompt') <> 'object'
+    or coalesce(btrim(p_payload->'prompt'->>'text'), '') = ''
+    or length(p_payload->'prompt'->>'text') > 10000 then
     raise exception using errcode = '22023', message = 'Prompt is required';
   end if;
   if jsonb_typeof(p_payload->'choices') <> 'array' then
@@ -23,7 +28,7 @@ begin
   if jsonb_array_length(p_payload->'choices') <> v_choice_count
     or (select count(distinct value->>'id') from jsonb_array_elements(p_payload->'choices')) <> v_choice_count
     or (select count(*) from jsonb_array_elements(p_payload->'choices') where (value->>'correct')::boolean) <> 1
-    or exists (select 1 from jsonb_array_elements(p_payload->'choices') where coalesce(btrim(value->>'text'), '') = '') then
+    or exists (select 1 from jsonb_array_elements(p_payload->'choices') where coalesce(btrim(value->>'text'), '') = '' or length(value->>'text') > 2000) then
     raise exception using errcode = '22023', message = 'Invalid choices';
   end if;
 
@@ -39,7 +44,10 @@ begin
     and question_version_id = p_question_version_id;
 
   if coalesce(btrim(p_payload->'translations'->'th'->>'explanation'), '') = ''
-    or coalesce(btrim(p_payload->'translations'->'en'->>'explanation'), '') = '' then
+    or coalesce(btrim(p_payload->'translations'->'en'->>'explanation'), '') = ''
+    or length(p_payload->'translations'->'th'->>'explanation') > 20000
+    or length(p_payload->'translations'->'en'->>'explanation') > 20000
+    or length(coalesce(p_payload->'translations'->'th'->>'promptTranslation', '')) > 10000 then
     raise exception using errcode = '22023', message = 'Thai and English explanations are required';
   end if;
   update public.translations set

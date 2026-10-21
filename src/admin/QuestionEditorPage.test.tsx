@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from '@testing-library/react'
+import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { I18nextProvider } from 'react-i18next'
 import { describe, expect, it, vi } from 'vitest'
 import { i18n } from '../i18n'
@@ -47,6 +47,9 @@ describe('QuestionEditorPage', () => {
       currentUserId="user-1" roles={['admin']} repository={repository}
     /></I18nextProvider>)
 
+    expect(screen.getAllByLabelText(/โจทย์|prompt/i).at(-1)).toHaveAttribute('maxlength', '10000')
+    expect(screen.getByLabelText(/Choice B|ตัวเลือก B/i)).toHaveAttribute('maxlength', '2000')
+    expect(screen.getByLabelText(/Thai explanation|คำอธิบายภาษาไทย/i)).toHaveAttribute('maxlength', '20000')
     fireEvent.change(screen.getByLabelText(/Choice B|ตัวเลือก B/i), { target: { value: 'before' } })
     fireEvent.click(screen.getByLabelText(/Correct answer B|คำตอบที่ถูก B/i))
     fireEvent.change(screen.getByLabelText(/Thai explanation|คำอธิบายภาษาไทย/i), { target: { value: 'คำอธิบายใหม่' } })
@@ -80,5 +83,30 @@ describe('QuestionEditorPage', () => {
     fireEvent.click(screen.getAllByRole('button', { name: /บันทึก Draft|save draft/i }).at(-1)!)
     expect(repository.saveDraft).not.toHaveBeenCalled()
     expect(screen.getByRole('alert')).toHaveTextContent(/กรอกข้อมูล|complete all/i)
+  })
+
+  it('keeps unsaved edits when the same draft is rendered again', () => {
+    const repository = { saveDraft: vi.fn(), submitForReview: vi.fn(), approve: vi.fn(), publish: vi.fn(), retire: vi.fn() }
+    const props = { draft: { id: 'version-3', createdBy: 'user-1', status: 'draft' as const, part: 5, prompt: 'Original' }, currentUserId: 'user-1', roles: ['admin'], repository }
+    const { rerender } = render(<I18nextProvider i18n={i18n}><QuestionEditorPage {...props} /></I18nextProvider>)
+    const prompt = screen.getAllByLabelText(/โจทย์|prompt/i).at(-1)!
+    fireEvent.change(prompt, { target: { value: 'Unsaved edit' } })
+
+    rerender(<I18nextProvider i18n={i18n}><QuestionEditorPage {...props} draft={{ ...props.draft }} /></I18nextProvider>)
+    expect(screen.getAllByLabelText(/โจทย์|prompt/i).at(-1)).toHaveValue('Unsaved edit')
+  })
+
+  it('requires saving changes before submitting for review', async () => {
+    const repository = { saveDraft: vi.fn().mockResolvedValue(undefined), submitForReview: vi.fn(), approve: vi.fn(), publish: vi.fn(), retire: vi.fn() }
+    render(<I18nextProvider i18n={i18n}><QuestionEditorPage
+      draft={{ id: 'version-4', createdBy: 'user-1', status: 'draft', part: 5, prompt: 'Original' }}
+      currentUserId="user-1" roles={['admin']} repository={repository}
+    /></I18nextProvider>)
+    fireEvent.change(screen.getAllByLabelText(/โจทย์|prompt/i).at(-1)!, { target: { value: 'Changed' } })
+    const submit = screen.getAllByRole('button', { name: /ส่งตรวจ|submit for review/i }).at(-1)!
+    expect(submit).toBeDisabled()
+
+    fireEvent.click(screen.getAllByRole('button', { name: /บันทึก Draft|save draft/i }).at(-1)!)
+    await waitFor(() => expect(submit).toBeEnabled())
   })
 })
