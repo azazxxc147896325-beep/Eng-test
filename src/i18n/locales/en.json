@@ -1,4 +1,26 @@
 {
+  "landing": {
+    "start": "Get started",
+    "free": "Start practicing free",
+    "kicker": "Try it free · Find your weak spots",
+    "title": "Practice TOEIC and know",
+    "titleAccent": "exactly what to improve",
+    "lead": "Take realistic practice tests, see results by Part, and get a clear next step for every study session.",
+    "benefits": "Why Score Quest",
+    "noCard": "No credit card",
+    "devices": "Works on mobile and iPad",
+    "reviewAfter": "Review after submission",
+    "preview": "Sample result",
+    "sampleResult": "Estimated score",
+    "focus": "Focus next: Part 7",
+    "focusDetail": "Multi-passage reading and key words",
+    "real": "Realistic test flow",
+    "realDetail": "Clear 45-minute Listening and 75-minute Reading sections in TOEIC Part order.",
+    "weak": "Part-level insights",
+    "weakDetail": "See accuracy and missed topics so you can practice what matters most.",
+    "progress": "Visible progress",
+    "progressDetail": "Save every result and compare it with your previous practice."
+  },
   "nav": {
     "home": "Home",
     "tests": "Tests",
@@ -36,6 +58,9 @@
   "auth": {
     "title": "Sign in to track your progress",
     "detail": "Save scores, find weak parts, and compare every attempt.",
+    "storyTitle": "Every score improvement starts with knowing yourself",
+    "storyDetail": "Use one account to continue practicing, track progress, and keep results on every device.",
+    "note": "We only use your Google account to sign you in and save your learning progress.",
     "google": "Continue with Google",
     "signIn": "Sign in",
     "signOut": "Sign out",

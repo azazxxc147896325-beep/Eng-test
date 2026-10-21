@@ -19,22 +19,23 @@ import { QuestionBankPage } from '../admin/QuestionBankPage'
 import { QuestionEditorRoutePage } from '../admin/QuestionEditorRoutePage'
 import { UserManagementRoutePage } from '../admin/UserManagementRoutePage'
 import { routerBasePath } from './basePath'
+import { LandingPage } from '../shell/LandingPage'
 
 export const router = createBrowserRouter([
+  { path: '/', element: <LandingPage /> },
   { path: '/login', element: <LoginPage /> },
   { path: '/auth/callback', element: <AuthCallbackPage /> },
   { path: '/attempt/:attemptId', element: <RequireUser><ExamPage /></RequireUser> },
   {
     path: '/',
-    element: <AppShell />,
+    element: <RequireUser><AppShell /></RequireUser>,
     children: [
-      { index: true, element: <Navigate to="/home" replace /> },
       { path: 'home', element: <HomePage /> },
-      { path: 'play', element: <RequireUser><ModeSelectPage /></RequireUser> },
+      { path: 'play', element: <ModeSelectPage /> },
       { path: 'results', element: <Navigate to="/history" replace /> },
       { path: 'results/:attemptId', element: <RequireUser><ResultsPage /></RequireUser> },
       { path: 'results/:attemptId/review', element: <RequireUser><ReviewPage /></RequireUser> },
-      { path: 'history', element: <RequireUser><HistoryPage /></RequireUser> },
+      { path: 'history', element: <HistoryPage /> },
       {
         path: 'admin',
         element: <RequireRole role="admin"><AdminLayout /></RequireRole>,
