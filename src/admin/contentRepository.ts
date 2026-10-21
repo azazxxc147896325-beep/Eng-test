@@ -2,7 +2,18 @@ import type { SupabaseClient } from '@supabase/supabase-js'
 import type { Database, Json } from '../shared/supabase/database.types'
 
 export type ContentStatus = Database['public']['Enums']['content_status']
-export type EditorDraft = { id: string; createdBy: string; status: ContentStatus; part: number; prompt: string; promptData?: Json }
+export type EditorChoice = { id: string; label: string; text: string; correct: boolean }
+export type EditorTranslation = { promptTranslation: string; explanation: string; transcript?: string }
+export type EditorDraft = {
+  id: string
+  createdBy: string
+  status: ContentStatus
+  part: number
+  prompt: string
+  promptData?: Json
+  choices?: EditorChoice[]
+  translations?: { th: EditorTranslation; en: EditorTranslation }
+}
 export interface ContentRepository {
   saveDraft(draft: EditorDraft): Promise<void>
   submitForReview(id: string): Promise<void>

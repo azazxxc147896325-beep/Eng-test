@@ -159,6 +159,9 @@
     "roleSaved": "Role saved",
     "roleSaveError": "Could not save role",
     "roleFor": "Role for {{name}}",
-    "promptLabel": "Question prompt"
+    "promptLabel": "Question prompt",
+    "choiceLabel": "Choice {{label}}",
+    "correctChoiceLabel": "Correct answer {{label}}",
+    "translations": "Translations and explanations"
   }
 }

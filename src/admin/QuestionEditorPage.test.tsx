@@ -27,4 +27,37 @@ describe('QuestionEditorPage', () => {
     fireEvent.click(screen.getAllByRole('button', { name: /บันทึก Draft|save draft/i }).at(-1)!)
     expect(repository.saveDraft).toHaveBeenCalledWith(expect.objectContaining({ prompt: 'New prompt' }))
   })
+
+  it('edits choices, correct answer, and bilingual explanations in one draft', () => {
+    const repository = { saveDraft: vi.fn(), submitForReview: vi.fn(), approve: vi.fn(), publish: vi.fn(), retire: vi.fn() }
+    render(<I18nextProvider i18n={i18n}><QuestionEditorPage
+      draft={{
+        id: 'version-1', createdBy: 'user-1', status: 'draft', part: 5, prompt: 'Old prompt',
+        choices: [
+          { id: 'a', label: 'A', text: 'at', correct: true },
+          { id: 'b', label: 'B', text: 'on', correct: false },
+          { id: 'c', label: 'C', text: 'in', correct: false },
+          { id: 'd', label: 'D', text: 'by', correct: false },
+        ],
+        translations: {
+          th: { promptTranslation: 'โจทย์แปล', explanation: 'คำอธิบายไทย' },
+          en: { promptTranslation: '', explanation: 'English explanation' },
+        },
+      }}
+      currentUserId="user-1" roles={['admin']} repository={repository}
+    /></I18nextProvider>)
+
+    fireEvent.change(screen.getByLabelText(/Choice B|ตัวเลือก B/i), { target: { value: 'before' } })
+    fireEvent.click(screen.getByLabelText(/Correct answer B|คำตอบที่ถูก B/i))
+    fireEvent.change(screen.getByLabelText(/Thai explanation|คำอธิบายภาษาไทย/i), { target: { value: 'คำอธิบายใหม่' } })
+    fireEvent.click(screen.getAllByRole('button', { name: /บันทึก Draft|save draft/i }).at(-1)!)
+
+    expect(repository.saveDraft).toHaveBeenCalledWith(expect.objectContaining({
+      choices: expect.arrayContaining([
+        expect.objectContaining({ id: 'b', text: 'before', correct: true }),
+        expect.objectContaining({ id: 'a', correct: false }),
+      ]),
+      translations: expect.objectContaining({ th: expect.objectContaining({ explanation: 'คำอธิบายใหม่' }) }),
+    }))
+  })
 })

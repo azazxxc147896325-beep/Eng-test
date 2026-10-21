@@ -197,6 +197,16 @@ h1 { max-width: 15ch; margin: 14px 0 18px; font-size: clamp(2.25rem, 6vw, 4.75re
 .admin-note { padding: 12px 14px; border-radius: 10px; color: var(--slate-700); background: var(--slate-100); font-size: .85rem; }
 .admin-editor label { display: grid; gap: 8px; font-weight: 800; }
 .admin-editor textarea { min-height: 180px; font-family: inherit; font-weight: 500; }
+.choice-editor { display: grid; gap: 10px; margin: 20px 0; padding: 18px; border: 1px solid var(--slate-200); border-radius: 12px; }
+.choice-editor legend { padding: 0 6px; font-weight: 800; }
+.choice-editor-row { display: grid; grid-template-columns: 28px minmax(0, 1fr); gap: 8px; align-items: end; }
+.choice-editor-row input[type="radio"] { width: 20px; height: 20px; margin-bottom: 12px; }
+.choice-editor-row label { display: grid; gap: 5px; }
+.choice-editor-row label input { min-height: 44px; padding: 0 12px; border: 1px solid var(--slate-200); border-radius: 10px; }
+.translation-editor { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 20px; }
+.translation-editor h2, .translation-editor label:first-of-type { grid-column: 1 / -1; }
+.translation-editor h2 { margin-bottom: 0; }
+.translation-editor textarea { min-height: 120px; }
 .user-list { display: grid; }
 .user-row { display: grid; grid-template-columns: 42px minmax(180px, 1fr) 170px 130px; gap: 14px; align-items: center; padding: 14px 0; border-bottom: 1px solid var(--slate-200); }
 .user-row small { display: block; margin-top: 3px; color: var(--slate-500); }
@@ -246,6 +256,8 @@ h1 { max-width: 15ch; margin: 14px 0 18px; font-size: clamp(2.25rem, 6vw, 4.75re
   .review-layout { grid-template-columns: 1fr; }
   .user-row { grid-template-columns: 42px 1fr; }
   .user-row select, .user-row button { grid-column: 2; }
+  .translation-editor { grid-template-columns: 1fr; }
+  .translation-editor h2, .translation-editor label:first-of-type { grid-column: auto; }
   .hero { min-height: 380px; text-align: center; justify-content: center; }
   .score-row { justify-content: center; }
   .mode-card { min-height: 210px; }

@@ -159,6 +159,9 @@
     "roleSaved": "บันทึกสิทธิ์แล้ว",
     "roleSaveError": "บันทึกสิทธิ์ไม่สำเร็จ",
     "roleFor": "Role ของ {{name}}",
-    "promptLabel": "โจทย์ / Prompt"
+    "promptLabel": "โจทย์ / Prompt",
+    "choiceLabel": "ตัวเลือก {{label}}",
+    "correctChoiceLabel": "คำตอบที่ถูก {{label}}",
+    "translations": "คำแปลและคำอธิบาย"
   }
 }
