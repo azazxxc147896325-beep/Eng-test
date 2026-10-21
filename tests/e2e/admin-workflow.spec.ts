@@ -45,3 +45,26 @@ test('admin import stays within phone, iPad, and desktop viewports', async ({ pa
     expect(size.width).toBeLessThanOrEqual(size.viewport)
   }
 })
+
+test('admin edits and saves a complete question draft on mobile', async ({ page }) => {
+  await mockUser(page, ['user', 'admin'])
+  await page.setViewportSize({ width: 320, height: 640 })
+  await page.route('https://example.supabase.co/rest/v1/question_versions**', (route) => route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({
+    id: '00000000-0000-0000-0000-000000000001', prompt: { text: 'The report is due ____ Friday.' }, difficulty: 'medium', status: 'draft',
+    created_at: '2026-10-21T00:00:00Z', created_by: 'user-1', questions: { part: 5 },
+    choices: ['at', 'on', 'in', 'by'].map((text, index) => ({ id: `00000000-0000-0000-0000-00000000000${index + 2}`, label: String.fromCharCode(65 + index), content: { text }, is_correct: index === 0, position: index + 1 })),
+    translations: [{ locale: 'th', prompt_translation: 'คำแปล', explanation: 'คำอธิบาย', transcript: null }, { locale: 'en', prompt_translation: null, explanation: 'Explanation', transcript: null }],
+  }) }))
+  let payload: unknown
+  await page.route('https://example.supabase.co/rest/v1/rpc/update_question_draft', async (route) => { payload = route.request().postDataJSON(); await route.fulfill({ status: 204 }) })
+
+  await page.goto('/admin/questions/00000000-0000-0000-0000-000000000001')
+  await page.getByLabel(/ตัวเลือก B|Choice B/i).fill('before')
+  await page.getByLabel(/คำตอบที่ถูก B|Correct answer B/i).check()
+  await page.getByRole('button', { name: /บันทึก Draft|Save draft/i }).click()
+
+  await expect(page.getByRole('status')).toContainText(/บันทึก Draft แล้ว|Draft saved/i)
+  expect(payload).toMatchObject({ p_question_version_id: '00000000-0000-0000-0000-000000000001', p_payload: { choices: expect.arrayContaining([expect.objectContaining({ label: 'B', text: 'before', correct: true })]) } })
+  const size = await page.evaluate(() => ({ width: document.documentElement.scrollWidth, viewport: window.innerWidth }))
+  expect(size.width).toBeLessThanOrEqual(size.viewport)
+})
