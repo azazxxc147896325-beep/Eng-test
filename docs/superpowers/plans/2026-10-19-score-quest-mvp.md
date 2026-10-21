@@ -8,11 +8,24 @@
 
 **Tech Stack:** React 19, TypeScript, Vite, React Router, TanStack Query, Zustand, i18next, Zod, Supabase, Deno Edge Functions, Gemini Developer API, vite-plugin-pwa, Vitest, Testing Library, Playwright, axe-core
 
-**Spec:** `/Users/a1/Documents/GitHub/Eng-test/docs/superpowers/specs/2026-10-19-toeic-practice-webapp-design.md`
+**Original product spec:** `docs/superpowers/specs/2026-10-19-toeic-practice-webapp-design.md` — ยังไม่พบไฟล์นี้ใน repository ปัจจุบัน จึงต้องกู้คืนหรือสร้างใหม่ก่อนตรวจ requirement รอบสุดท้าย
+
+**Admin MVP spec:** `docs/superpowers/specs/2026-10-20-admin-console-design.md` — อยู่ใน branch `feature/admin-mvp` และจะเข้า `main` หลัง merge
+
+## Implementation Status Update — 2026-10-21
+
+- Admin MVP พัฒนาและ commit แล้วใน branch `feature/admin-mvp` (`8cbc945`) แต่ยังไม่ได้ merge เข้า `main`
+- เพิ่มหน้าภาพรวม, คลังข้อสอบ, คิวตรวจ, ตัวแก้ไข Draft, นำเข้าไฟล์ และจัดการสิทธิ์ผู้ใช้
+- หน้า `/admin` ทุกหน้าบังคับ role `admin`; การเปลี่ยน role และการนำเข้าหลาย Draft ตรวจสิทธิ์ซ้ำใน Supabase RPC
+- รองรับการนำเข้า `.xlsx`, `.csv`, `.json`, `.jsonl` สูงสุด 5 MB และ 200 ชุดต่อครั้ง โดย CSV/XLSX ใช้เทมเพลต Part 5
+- รองรับภาษาไทย/อังกฤษและหน้าจอ 320px, iPad 768px และ desktop 1440px
+- Verification ล่าสุด: Vitest 58/58, Playwright 10/10, TypeScript, production build และ `npm audit` ผ่าน
+- ยังต้อง merge branch, push GitHub และรัน `npx supabase db push` เพื่อใช้ migration `0010_admin_console.sql` บน Supabase จริง
+- งานหลัง Admin MVP: เพิ่มตัวแก้ไข choices/translations/media แบบเต็ม, ส่งกลับให้แก้ไขจากคิวตรวจ, TTS และคลังข้อสอบที่ผ่าน human review
 
 ## Global Constraints
 
-- Project root คือ `/Users/a1/Documents/GitHub/Eng-test/Eng-test`; เก็บ source และเอกสาร implementation ภายใน Git repository นี้
+- Project root คือ `/Users/a1/Eng-test/Eng-test`; เก็บ source และเอกสาร implementation ภายใน Git repository นี้
 - Full Test ต้องมี 200 ข้อ: Listening 100 ข้อ/45 นาที ตาม Part 1–4 และ Reading 100 ข้อ/75 นาที ตาม Part 5–7
 - Full/Quick Listening เล่นอัตโนมัติครั้งเดียว ห้าม pause, seek, replay และย้อนกลับ; Practice อนุญาตทั้งหมด
 - ตัวโจทย์และตัวเลือกเป็นภาษาอังกฤษ; UI, เฉลย คำแปล และคำอธิบายรองรับ `th`/`en`
@@ -565,38 +578,42 @@ git commit -m "feat: add answer review and progress history"
 **Interfaces:**
 - Produces: `ContentDraftSchema`; workflow actions `saveDraft`, `submitForReview`, `approve`, `publish`, `retire`; CLI `npm run content:validate -- file.jsonl`
 
-- [ ] **Step 1: Write failing schema, role and workflow-transition tests**
+- [x] **Step 1: Write failing schema, role and workflow-transition tests**
 
 Assert exact choice counts, one correct answer, complete group structure, required translations/media and creator-cannot-approve rule.
 
-- [ ] **Step 2: Run tests and confirm failure**
+- [x] **Step 2: Run tests and confirm failure**
 
 Run: `npm test -- --run src/admin scripts/validate-content.test.ts`
 Expected: FAIL
 
-- [ ] **Step 3: Implement per-Part Zod schemas and JSONL/CSV validation**
+- [x] **Step 3: Implement per-Part Zod schemas and JSONL/CSV validation**
 
 Validation output must include row/group id, field path and actionable message.
 
-- [ ] **Step 4: Implement editor, preview, review queue and audited status transitions**
+- [x] **Step 4: Implement editor, preview, review queue and audited status transitions**
 
 Admin publishing calls server RPC; UI role hiding is not the authorization boundary.
 
-- [ ] **Step 5: Implement dashboard pool coverage by Part/status/full-test equivalents**
+- [x] **Step 5: Implement dashboard pool coverage by Part/status/full-test equivalents**
 
 Coverage must use complete eligible groups, not raw question count alone.
 
 - [ ] **Step 6: Verify admin workflow and RLS in browser tests**
 
+สถานะ: unit/E2E/browser responsive ผ่านแล้ว แต่ยังไม่ได้รัน SQL policy tests ของ migration `0010_admin_console.sql` กับ Supabase remote
+
 Run: `npm test -- --run src/admin scripts && npm run test:e2e -- tests/e2e/admin-workflow.spec.ts && npx supabase test db`
 Expected: PASS
 
-- [ ] **Step 7: Commit**
+- [x] **Step 7: Commit**
 
 ```bash
 git add src/admin scripts tests/e2e/admin-workflow.spec.ts supabase
 git commit -m "feat: add reviewed content administration"
 ```
+
+Implementation commit ปัจจุบัน: `8cbc945 feat: add functional admin console` บน branch `feature/admin-mvp`
 
 ### Task 13: Add Gemini draft generation through a provider adapter
 
