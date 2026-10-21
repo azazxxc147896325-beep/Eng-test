@@ -20,6 +20,7 @@ import { QuestionEditorRoutePage } from '../admin/QuestionEditorRoutePage'
 import { UserManagementRoutePage } from '../admin/UserManagementRoutePage'
 import { routerBasePath } from './basePath'
 import { LandingPage } from '../shell/LandingPage'
+import { SettingsPage } from '../shell/SettingsPage'
 
 export const router = createBrowserRouter([
   { path: '/', element: <LandingPage /> },
@@ -36,6 +37,7 @@ export const router = createBrowserRouter([
       { path: 'results/:attemptId', element: <RequireUser><ResultsPage /></RequireUser> },
       { path: 'results/:attemptId/review', element: <RequireUser><ReviewPage /></RequireUser> },
       { path: 'history', element: <HistoryPage /> },
+      { path: 'settings', element: <SettingsPage /> },
       {
         path: 'admin',
         element: <RequireRole role="admin"><AdminLayout /></RequireRole>,

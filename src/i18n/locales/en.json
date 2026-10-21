@@ -25,7 +25,9 @@
     "home": "Home",
     "tests": "Tests",
     "results": "Results",
-    "settings": "Settings"
+    "settings": "Settings",
+    "primary": "Primary navigation",
+    "learner": "Learner"
   },
   "home": {
     "eyebrow": "YOUR TOEIC JOURNEY",
@@ -37,7 +39,19 @@
     "streak": "7-day streak",
     "mission": "TODAY'S MISSION",
     "missionTitle": "Part 5 · Grammar",
-    "missionDetail": "Answer 8 of 10 correctly"
+    "missionDetail": "Answer 8 of 10 correctly",
+    "welcome": "Ready for today's mission?",
+    "welcomeDetail": "A little focused practice every day makes progress easier to see.",
+    "newPractice": "New practice",
+    "practiceByPart": "Practice by Part",
+    "viewAll": "View all",
+    "part5": "Incomplete sentences",
+    "part6": "Text completion",
+    "part7": "Reading comprehension",
+    "noScore": "Complete your first Full Test to see an estimated score.",
+    "recent": "Recent activity",
+    "noHistory": "No practice history yet. Start your first set.",
+    "mode": { "full": "Full Test", "quick": "Quick Test", "practice": "Practice" }
   },
   "modes": {
     "title": "Choose a practice mode",
@@ -84,6 +98,22 @@
     "loginError": "Sign-in failed. Please try again.",
     "callbackError": "Could not finish signing in.",
     "tryAgain": "Try signing in again"
+  },
+  "settings": {
+    "title": "Practice settings",
+    "subtitle": "Manage your language, goal, and account",
+    "language": "App language",
+    "languageDetail": "Questions stay in English. Menus and explanations use your selected language.",
+    "target": "Target score",
+    "targetDetail": "Used to show how close you are to your personal goal.",
+    "targetLabel": "Target score",
+    "install": "Install the app",
+    "installDetail": "Open your browser menu and choose Add to Home Screen to install Score Quest.",
+    "save": "Save settings",
+    "saving": "Saving…",
+    "saved": "Saved",
+    "saveError": "Could not save. Please try again.",
+    "invalidTarget": "Score must be from 10–990 in increments of 5."
   },
   "exam": {
     "loading": "Loading exam…",
