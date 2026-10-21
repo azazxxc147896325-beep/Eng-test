@@ -48,7 +48,21 @@
     "quickDetail": "50 ข้อ · ประมาณ 30 นาที",
     "part": "Practice by Part",
     "partDetail": "เลือก Part 1–7 และระดับความยาก",
-    "start": "เลือกโหมด"
+    "start": "เลือกโหมด",
+    "realBadge": "จำลองสนามสอบ",
+    "quickBadge": "วัดระดับแบบสั้น",
+    "startFull": "เริ่ม Full Test",
+    "startQuick": "เริ่ม Quick Test",
+    "startPart": "เริ่มฝึก Part",
+    "starting": "กำลังเตรียมข้อสอบ…",
+    "difficulty": "ระดับความยาก",
+    "questionCount": "จำนวนข้อ",
+    "easy": "ง่าย",
+    "medium": "ปานกลาง",
+    "hard": "ยาก",
+    "insufficient": "คลังข้อสอบในตัวเลือกนี้ยังไม่เพียงพอ กรุณาเลือก Part หรือระดับอื่น",
+    "existing": "คุณมีข้อสอบที่ยังทำไม่เสร็จ กรุณากลับไปทำชุดเดิมก่อน",
+    "startError": "เตรียมข้อสอบไม่สำเร็จ กรุณาลองใหม่"
   },
   "language": {
     "label": "ภาษา",

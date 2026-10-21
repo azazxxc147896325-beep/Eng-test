@@ -48,7 +48,21 @@
     "quickDetail": "50 questions · about 30 minutes",
     "part": "Practice by Part",
     "partDetail": "Choose Part 1–7 and difficulty",
-    "start": "Select mode"
+    "start": "Select mode",
+    "realBadge": "Exam simulation",
+    "quickBadge": "Quick level check",
+    "startFull": "Start Full Test",
+    "startQuick": "Start Quick Test",
+    "startPart": "Start Part practice",
+    "starting": "Preparing your test…",
+    "difficulty": "Difficulty",
+    "questionCount": "Questions",
+    "easy": "Easy",
+    "medium": "Medium",
+    "hard": "Hard",
+    "insufficient": "There are not enough questions for this selection yet. Try another Part or difficulty.",
+    "existing": "You already have an unfinished test. Please continue that attempt first.",
+    "startError": "Could not prepare the test. Please try again."
   },
   "language": {
     "label": "Language",
