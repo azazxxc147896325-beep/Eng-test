@@ -46,4 +46,21 @@ describe('ExamPage', () => {
     fireEvent.click(screen.getByRole('button', { name: /ส่งคำตอบ|submit/i }))
     await waitFor(() => expect(submit).toHaveBeenCalledWith('attempt-1'))
   })
+
+  it('moves from the final Listening question to the first Reading question', () => {
+    const fullSnapshot: AttemptSnapshot = {
+      ...snapshot,
+      mode: 'full',
+      currentSection: 'listening',
+      items: [
+        { ...snapshot.items[0], section: 'listening', part: 1, prompt: { text: 'Last listening question' } },
+        { ...snapshot.items[1], section: 'reading', part: 5, prompt: { text: 'First reading question' } },
+      ],
+    }
+    const resultsRepository = { submit: vi.fn(), getResult: vi.fn(), getReview: vi.fn(), listHistory: vi.fn() }
+    render(<I18nextProvider i18n={i18n}><MemoryRouter><ExamPage snapshot={fullSnapshot} queue={{ queueResponse: vi.fn() }} resultsRepository={resultsRepository} /></MemoryRouter></I18nextProvider>)
+
+    fireEvent.click(screen.getByRole('button', { name: /เริ่ม Reading|Start Reading/i }))
+    expect(screen.getByText('First reading question')).toBeVisible()
+  })
 })

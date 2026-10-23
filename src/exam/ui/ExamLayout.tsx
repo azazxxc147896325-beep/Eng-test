@@ -21,7 +21,7 @@ export function ExamLayout({ store, onComplete }: { store: AttemptStore; onCompl
   const next = state.snapshot.items[state.currentItemIndex + 1]
   const nextSectionItem = state.snapshot.items.find((candidate) => candidate.ordinal > item.ordinal && candidate.section !== state.currentSection)
   const isLastQuestion = state.currentItemIndex === state.snapshot.items.length - 1
-  const isSectionEnd = !next && Boolean(nextSectionItem)
+  const isSectionEnd = Boolean(nextSectionItem && next?.section !== state.currentSection)
   const [finishing, setFinishing] = useState(false)
   const [finishError, setFinishError] = useState('')
   const nextAudio = next?.media.find((asset) => asset.kind === 'audio')
