@@ -19,4 +19,10 @@ describe('HistoryPage', () => {
     expect(screen.getByRole('table')).toBeVisible()
     expect(screen.queryByText('900')).not.toBeInTheDocument()
   })
+
+  it('shows a useful first-use state when no attempts exist', () => {
+    render(<I18nextProvider i18n={i18n}><MemoryRouter><HistoryPage history={[]} /></MemoryRouter></I18nextProvider>)
+    expect(screen.getByText(/ยังไม่มีผลสอบ|No results yet/i)).toBeVisible()
+    expect(screen.getByRole('button', { name: /เริ่มฝึก|Start practicing/i })).toBeVisible()
+  })
 })

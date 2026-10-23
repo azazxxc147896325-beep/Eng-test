@@ -37,4 +37,13 @@ describe('ExamPage', () => {
     fireEvent.click(screen.getByRole('button', { name: /ย้อนกลับ|previous/i }))
     expect(screen.getByText('Question 1')).toBeVisible()
   })
+
+  it('submits from the final question and opens the result', async () => {
+    const submit = vi.fn().mockResolvedValue({})
+    const resultsRepository = { submit, getResult: vi.fn(), getReview: vi.fn(), listHistory: vi.fn() }
+    render(<I18nextProvider i18n={i18n}><MemoryRouter><ExamPage snapshot={{ ...snapshot, items: [snapshot.items[0]] }} queue={{ queueResponse: vi.fn() }} resultsRepository={resultsRepository} /></MemoryRouter></I18nextProvider>)
+
+    fireEvent.click(screen.getByRole('button', { name: /ส่งคำตอบ|submit/i }))
+    await waitFor(() => expect(submit).toHaveBeenCalledWith('attempt-1'))
+  })
 })

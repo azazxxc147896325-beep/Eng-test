@@ -39,6 +39,7 @@
 .exam-footer button:first-child { justify-self: start; }
 .exam-footer .next-button { justify-self: end; border-color: var(--blue-600); color: var(--white); background: var(--blue-600); }
 .exam-footer .marked { color: #8b5b08; background: var(--amber-100); }
+.exam-submit-error { position: fixed; z-index: 90; right: 20px; bottom: 88px; margin: 0; padding: 12px 16px; border-radius: 10px; color: #8a302b; background: #fff0ef; box-shadow: 0 8px 28px rgb(16 42 67 / 18%); }
 .exam-status { min-height: 100dvh; display: grid; place-items: center; }
 
 @media (min-width: 701px) and (max-width: 1000px) {

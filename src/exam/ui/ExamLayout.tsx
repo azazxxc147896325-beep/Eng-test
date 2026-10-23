@@ -7,7 +7,7 @@ import { ExamFooter } from './ExamFooter'
 import { QuestionRenderer } from './QuestionRenderer'
 import { createServerClock } from '../session/clock'
 
-export function ExamLayout({ store }: { store: AttemptStore }) {
+export function ExamLayout({ store, onComplete }: { store: AttemptStore; onComplete: () => Promise<void> }) {
   const { t } = useTranslation()
   const state = useAttemptStore(store)
   const [navigatorOpen, setNavigatorOpen] = useState(false)
@@ -19,6 +19,11 @@ export function ExamLayout({ store }: { store: AttemptStore }) {
   const response = state.responses[item.attemptItemId]
   const previous = state.snapshot.items[state.currentItemIndex - 1]
   const next = state.snapshot.items[state.currentItemIndex + 1]
+  const nextSectionItem = state.snapshot.items.find((candidate) => candidate.ordinal > item.ordinal && candidate.section !== state.currentSection)
+  const isLastQuestion = state.currentItemIndex === state.snapshot.items.length - 1
+  const isSectionEnd = !next && Boolean(nextSectionItem)
+  const [finishing, setFinishing] = useState(false)
+  const [finishError, setFinishError] = useState('')
   const nextAudio = next?.media.find((asset) => asset.kind === 'audio')
   const remaining = state.sectionExpiresAt ? clock.remainingMs(state.sectionExpiresAt) : null
   const timeLabel = remaining === null
@@ -39,6 +44,23 @@ export function ExamLayout({ store }: { store: AttemptStore }) {
   function closeNavigator() {
     setNavigatorOpen(false)
     requestAnimationFrame(() => navigatorButton.current?.focus())
+  }
+
+  async function advance() {
+    if (next?.section === state.currentSection) {
+      store.next()
+      return
+    }
+    if (isSectionEnd && nextSectionItem) {
+      const minutes = state.snapshot.mode === 'full' ? 75 : 18
+      store.transitionSection(nextSectionItem.section, new Date(clock.now().getTime() + minutes * 60_000).toISOString())
+      return
+    }
+    if (isLastQuestion) {
+      setFinishing(true)
+      setFinishError('')
+      try { await onComplete() } catch { setFinishError(t('exam.submitError')); setFinishing(false) }
+    }
   }
 
   return (
@@ -76,12 +98,14 @@ export function ExamLayout({ store }: { store: AttemptStore }) {
           onClose={closeNavigator}
         />
       </div>
+      {finishError && <p className="exam-submit-error" role="alert">{finishError}</p>}
       <ExamFooter
         canPrevious={previous?.section === state.currentSection}
-        canNext={next?.section === state.currentSection && listeningUnlocked}
+        canNext={!finishing && listeningUnlocked && (next?.section === state.currentSection || isSectionEnd || isLastQuestion)}
+        nextLabel={finishing ? t('exam.submitting') : isLastQuestion ? t('exam.submit') : isSectionEnd ? t('exam.startReading') : undefined}
         marked={response?.marked ?? false}
         onPrevious={store.previous}
-        onNext={store.next}
+        onNext={() => void advance()}
         onMark={() => void store.toggleMark()}
       />
     </main>

@@ -15,6 +15,7 @@ export type HistoryEntry = {
 }
 
 export interface ResultsRepository {
+  submit(attemptId: string): Promise<ScoreResult>
   getResult(attemptId: string): Promise<ScoreResult>
   getReview(attemptId: string): Promise<AttemptReview>
   listHistory(): Promise<HistoryEntry[]>
@@ -42,6 +43,10 @@ export class SupabaseResultsRepository implements ResultsRepository {
     const { data, error } = await this.client.functions.invoke('submit-attempt', { body })
     if (error) return mapError(error)
     return envelopeSchema.parse(data)
+  }
+
+  async submit(attemptId: string) {
+    return (await this.invoke({ action: 'submit', attemptId })).result as ScoreResult
   }
 
   async getResult(attemptId: string) {

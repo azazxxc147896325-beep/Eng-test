@@ -122,6 +122,10 @@
     "questionOf": "ข้อ {{current}} จาก {{total}}",
     "previous": "ย้อนกลับ",
     "next": "ถัดไป",
+    "startReading": "เริ่ม Reading",
+    "submit": "ส่งคำตอบ",
+    "submitting": "กำลังส่ง…",
+    "submitError": "ส่งคำตอบไม่สำเร็จ กรุณาลองใหม่",
     "mark": "ทำเครื่องหมาย",
     "close": "ปิด",
     "timed": "จับเวลา",
@@ -151,6 +155,14 @@
     "progressTable": "ตารางคะแนน Full Test ที่ยืนยันเวลาแล้ว",
     "date": "วันที่",
     "points": "คะแนน"
+    ,"complete": "ทำข้อสอบเสร็จแล้ว",
+    "completeDetail": "ดูคะแนนประมาณการและเลือกหัวข้อที่ควรฝึกต่อ",
+    "openReview": "ดูเฉลยและคำแปล",
+    "practiceAgain": "ฝึกอีกครั้ง",
+    "historyDetail": "ดูคะแนน Full Test ที่ยืนยันเวลาแล้วและเปรียบเทียบแต่ละครั้ง",
+    "noHistory": "ยังไม่มีผลสอบ",
+    "noHistoryDetail": "เริ่มฝึกหรือทำ Full Test ครั้งแรก แล้วผลของคุณจะปรากฏที่นี่",
+    "startPractice": "เริ่มฝึก"
   },
   "admin": {
     "dashboard": "ภาพรวมระบบ",

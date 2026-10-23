@@ -122,6 +122,10 @@
     "questionOf": "Question {{current}} of {{total}}",
     "previous": "Previous",
     "next": "Next",
+    "startReading": "Start Reading",
+    "submit": "Submit answers",
+    "submitting": "Submitting…",
+    "submitError": "Could not submit your answers. Please try again.",
     "mark": "Mark",
     "close": "Close",
     "timed": "Timed",
@@ -151,6 +155,14 @@
     "progressTable": "Verified Full Test score table",
     "date": "Date",
     "points": "points"
+    ,"complete": "Test complete",
+    "completeDetail": "Review your estimated score and choose what to practice next.",
+    "openReview": "View answers and translation",
+    "practiceAgain": "Practice again",
+    "historyDetail": "See verified Full Test scores and compare each attempt.",
+    "noHistory": "No results yet",
+    "noHistoryDetail": "Start practicing or complete your first Full Test and your results will appear here.",
+    "startPractice": "Start practicing"
   },
   "admin": {
     "dashboard": "System overview",

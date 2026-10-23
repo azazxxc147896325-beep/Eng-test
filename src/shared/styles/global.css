@@ -214,6 +214,10 @@ h1 { max-width: 15ch; margin: 14px 0 18px; font-size: clamp(2.25rem, 6vw, 4.75re
 .settings-actions { display: flex; align-items: center; gap: 16px; margin-top: 22px; }.settings-actions [role="status"]{color:var(--green-600);font-weight:800}
 
 .results-page { display: grid; grid-template-columns: .8fr 1.2fr; gap: 22px; }
+.result-view { width: min(1080px, calc(100% - 40px)); }
+.result-heading, .history-heading { display: flex; align-items: end; justify-content: space-between; gap: 22px; margin-bottom: 26px; }
+.result-heading h1, .history-heading h1 { max-width: none; margin: 10px 0 6px; font-size: clamp(2.2rem, 5vw, 3.8rem); }
+.result-actions { display: flex; gap: 10px; }.result-actions button,.history-empty button{min-height:46px;padding:0 18px;border:1px solid var(--slate-200);border-radius:10px;color:var(--navy-900);background:white;font-weight:800}.result-actions button:first-child,.history-empty button{border-color:var(--blue-600);color:white;background:var(--blue-600)}
 .score-summary, .part-breakdown { padding: clamp(24px, 4vw, 42px); border: 1px solid var(--slate-200); border-radius: var(--radius-lg); background: var(--white); box-shadow: var(--shadow-card); }
 .result-total, .result-range { display: block; margin: 18px 0; color: var(--blue-700); font-size: clamp(3.5rem, 10vw, 6rem); line-height: 1; }
 .section-scores { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
@@ -233,6 +237,8 @@ h1 { max-width: 15ch; margin: 14px 0 18px; font-size: clamp(2.25rem, 6vw, 4.75re
 .prompt-translation, .explanation { color: var(--slate-700); }
 .explanation { margin-top: 18px; padding: 14px; border-left: 4px solid var(--blue-600); background: var(--blue-100); }
 .history-page { max-width: 860px; }
+.history-empty { display: grid; min-height: 360px; place-items: center; align-content: center; padding: 34px; border: 1px solid var(--slate-200); border-radius: var(--radius-lg); background: white; text-align: center; }
+.history-empty > span { display: grid; width: 54px; height: 54px; place-items: center; border-radius: 15px; color: var(--blue-700); background: var(--blue-100); font-size: 1.5rem; font-weight: 900; }.history-empty h2{margin:18px 0 4px}.history-empty p{max-width:34rem;margin:0 0 20px;color:var(--slate-500);line-height:1.6}
 .score-change { color: var(--green-600); font-size: 1.5rem; font-weight: 900; }
 .progress-chart { padding: clamp(20px, 4vw, 36px); border: 1px solid var(--slate-200); border-radius: var(--radius-lg); background: var(--white); box-shadow: var(--shadow-card); color: var(--blue-600); }
 .progress-chart svg { width: 100%; height: auto; }
@@ -377,6 +383,7 @@ h1 { max-width: 15ch; margin: 14px 0 18px; font-size: clamp(2.25rem, 6vw, 4.75re
   .practice-controls { grid-template-columns: 1fr 1fr 1fr; }
   .practice-controls .button { grid-column: 1 / -1; }
   .results-page { grid-template-columns: 1fr; overflow: auto; }
+  .result-heading, .history-heading { align-items: flex-start; flex-direction: column; }
   .admin-layout { grid-template-columns: 1fr; }
   .admin-layout > aside { display: flex; overflow-x: auto; padding: 10px 12px; }
   .admin-layout > aside h1, .admin-badge { display: none; }
