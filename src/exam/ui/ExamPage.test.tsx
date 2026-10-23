@@ -18,6 +18,17 @@ const snapshot: AttemptSnapshot = {
 }
 
 describe('ExamPage', () => {
+  it('retries queued answers on load and when the browser comes back online', async () => {
+    const flushResponses = vi.fn().mockResolvedValue({ saved: 0, pending: 0 })
+    const { unmount } = render(<I18nextProvider i18n={i18n}><MemoryRouter><ExamPage snapshot={snapshot}
+      queue={{ queueResponse: vi.fn(), flushResponses }} /></MemoryRouter></I18nextProvider>)
+
+    await waitFor(() => expect(flushResponses).toHaveBeenCalledTimes(1))
+    window.dispatchEvent(new Event('online'))
+    await waitFor(() => expect(flushResponses).toHaveBeenCalledTimes(2))
+    unmount()
+  })
+
   it('autosaves a choice and supports next/previous navigation', async () => {
     const queueResponse = vi.fn().mockResolvedValue({ accepted: true })
     render(
@@ -68,5 +79,66 @@ describe('ExamPage', () => {
     fireEvent.click(screen.getByRole('button', { name: /เริ่ม Reading|Start Reading/i }))
     await waitFor(() => expect(transition).toHaveBeenCalledWith('attempt-1'))
     expect(await screen.findByText('First reading question')).toBeVisible()
+  })
+
+  it('automatically transitions an expired Listening section', async () => {
+    const expiredListening: AttemptSnapshot = {
+      ...snapshot,
+      mode: 'full',
+      currentSection: 'listening',
+      serverNow: '2026-10-20T01:00:00Z',
+      sectionExpiresAt: '2026-10-20T00:45:00Z',
+      items: [
+        { ...snapshot.items[0], section: 'listening', part: 1 },
+        { ...snapshot.items[1], section: 'reading', part: 5 },
+      ],
+    }
+    const transition = vi.fn().mockResolvedValue({
+      ...expiredListening, currentSection: 'reading', sectionExpiresAt: '2026-10-20T02:15:00Z',
+    })
+    const repository = { transition } as unknown as import('../data/AttemptRepository').AttemptRepository
+
+    render(<I18nextProvider i18n={i18n}><MemoryRouter><ExamPage snapshot={expiredListening}
+      queue={{ queueResponse: vi.fn() }} repository={repository} /></MemoryRouter></I18nextProvider>)
+
+    await waitFor(() => expect(transition).toHaveBeenCalledWith('attempt-1'))
+  })
+
+  it('automatically submits an expired Reading section', async () => {
+    const submit = vi.fn().mockResolvedValue({})
+    const expiredReading: AttemptSnapshot = {
+      ...snapshot,
+      mode: 'full',
+      currentSection: 'reading',
+      serverNow: '2026-10-20T02:00:00Z',
+      sectionExpiresAt: '2026-10-20T01:59:00Z',
+      items: [{ ...snapshot.items[0], section: 'reading', part: 5 }],
+    }
+    const resultsRepository = { submit, getResult: vi.fn(), getReview: vi.fn(), listHistory: vi.fn() }
+
+    render(<I18nextProvider i18n={i18n}><MemoryRouter><ExamPage snapshot={expiredReading}
+      queue={{ queueResponse: vi.fn() }} resultsRepository={resultsRepository} /></MemoryRouter></I18nextProvider>)
+
+    await waitFor(() => expect(submit).toHaveBeenCalledWith('attempt-1'))
+  })
+
+  it('retries an expired submission after connectivity returns', async () => {
+    const submit = vi.fn().mockRejectedValueOnce(new Error('offline')).mockResolvedValue({})
+    const expiredReading: AttemptSnapshot = {
+      ...snapshot,
+      mode: 'full',
+      currentSection: 'reading',
+      serverNow: '2026-10-20T02:00:00Z',
+      sectionExpiresAt: '2026-10-20T01:59:00Z',
+      items: [{ ...snapshot.items[0], section: 'reading', part: 5 }],
+    }
+    const resultsRepository = { submit, getResult: vi.fn(), getReview: vi.fn(), listHistory: vi.fn() }
+    const { unmount } = render(<I18nextProvider i18n={i18n}><MemoryRouter><ExamPage snapshot={expiredReading}
+      queue={{ queueResponse: vi.fn() }} resultsRepository={resultsRepository} /></MemoryRouter></I18nextProvider>)
+
+    await waitFor(() => expect(submit).toHaveBeenCalledTimes(1))
+    window.dispatchEvent(new Event('online'))
+    await waitFor(() => expect(submit).toHaveBeenCalledTimes(2))
+    unmount()
   })
 })

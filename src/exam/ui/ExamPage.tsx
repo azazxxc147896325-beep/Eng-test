@@ -11,7 +11,7 @@ import { ExamLayout } from './ExamLayout'
 import { SupabaseResultsRepository, type ResultsRepository } from '../../results/resultsRepository'
 import './exam.css'
 
-type QueuePort = Pick<OfflineResponseQueue, 'queueResponse'>
+type QueuePort = Pick<OfflineResponseQueue, 'queueResponse'> & Partial<Pick<OfflineResponseQueue, 'flushResponses'>>
 
 function ReadyExam({ snapshot, queue, attemptRepository, resultsRepository, onSnapshot }: {
   snapshot: AttemptSnapshot
@@ -22,6 +22,12 @@ function ReadyExam({ snapshot, queue, attemptRepository, resultsRepository, onSn
 }) {
   const store = useMemo(() => createAttemptStore(snapshot, queue), [snapshot, queue])
   const navigate = useNavigate()
+  useEffect(() => {
+    const syncQueuedResponses = () => { void queue.flushResponses?.() }
+    syncQueuedResponses()
+    window.addEventListener('online', syncQueuedResponses)
+    return () => window.removeEventListener('online', syncQueuedResponses)
+  }, [queue])
   return <ExamLayout
     store={store}
     onTransition={attemptRepository ? async () => {

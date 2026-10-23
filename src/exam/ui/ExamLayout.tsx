@@ -29,6 +29,7 @@ export function ExamLayout({ store, onComplete, onTransition }: {
   const isSectionEnd = Boolean(nextSectionItem && next?.section !== state.currentSection)
   const [finishing, setFinishing] = useState(false)
   const [finishError, setFinishError] = useState('')
+  const handledExpiry = useRef('')
   const nextAudio = next?.media.find((asset) => asset.kind === 'audio')
   const remaining = state.sectionExpiresAt ? clock.remainingMs(state.sectionExpiresAt) : null
   const timeLabel = remaining === null
@@ -42,6 +43,15 @@ export function ExamLayout({ store, onComplete, onTransition }: {
   }, [state.sectionExpiresAt])
 
   useEffect(() => {
+    const retryExpiredAction = () => {
+      handledExpiry.current = ''
+      window.setTimeout(() => setTick((value) => value + 1), 0)
+    }
+    window.addEventListener('online', retryExpiredAction)
+    return () => window.removeEventListener('online', retryExpiredAction)
+  }, [])
+
+  useEffect(() => {
     const hasAudio = item.media.some((asset) => asset.kind === 'audio')
     if (state.snapshot.mode === 'practice' || !hasAudio) setListeningUnlocked(true)
   }, [item.attemptItemId, item.media, state.snapshot.mode])
@@ -51,33 +61,43 @@ export function ExamLayout({ store, onComplete, onTransition }: {
     requestAnimationFrame(() => navigatorButton.current?.focus())
   }
 
-  async function advance() {
-    if (next?.section === state.currentSection) {
-      store.next()
-      return
-    }
-    if (isSectionEnd && nextSectionItem) {
-      setFinishing(true)
-      setFinishError('')
-      try {
-        const transitioned = await onTransition?.()
-        store.transitionSection(
-          transitioned?.currentSection ?? nextSectionItem.section,
-          transitioned?.sectionExpiresAt ?? null,
-        )
-        setFinishing(false)
-      } catch {
-        setFinishError(t('exam.submitError'))
-        setFinishing(false)
-      }
-      return
-    }
-    if (isLastQuestion) {
-      setFinishing(true)
-      setFinishError('')
-      try { await onComplete() } catch { setFinishError(t('exam.submitError')); setFinishing(false) }
+  async function transitionToReading() {
+    if (!nextSectionItem) return
+    setFinishing(true)
+    setFinishError('')
+    try {
+      const transitioned = await onTransition?.()
+      store.transitionSection(
+        transitioned?.currentSection ?? nextSectionItem.section,
+        transitioned?.sectionExpiresAt ?? null,
+      )
+      setFinishing(false)
+    } catch {
+      setFinishError(t('exam.submitError'))
+      setFinishing(false)
     }
   }
+
+  async function completeAttempt() {
+    setFinishing(true)
+    setFinishError('')
+    try { await onComplete() } catch { setFinishError(t('exam.submitError')); setFinishing(false) }
+  }
+
+  async function advance() {
+    if (next?.section === state.currentSection) return store.next()
+    if (isSectionEnd) return transitionToReading()
+    if (isLastQuestion) return completeAttempt()
+  }
+
+  useEffect(() => {
+    if (!state.sectionExpiresAt || remaining !== 0 || finishing) return
+    const expiryKey = `${state.currentSection}:${state.sectionExpiresAt}`
+    if (handledExpiry.current === expiryKey) return
+    handledExpiry.current = expiryKey
+    if (state.currentSection === 'listening' && nextSectionItem) void transitionToReading()
+    else if (state.currentSection === 'reading') void completeAttempt()
+  }, [finishing, remaining, state.currentSection, state.sectionExpiresAt])
 
   return (
     <main className="exam-page">

@@ -35,6 +35,14 @@ export class OfflineResponseQueue {
       await transaction.store.put({ key, response, deadlineAt })
     }
     await transaction.done
+
+    try {
+      await this.repository.save(response)
+      const current = await database.get('responses', key)
+      if (current?.response.answeredAt === response.answeredAt) await database.delete('responses', key)
+    } catch {
+      // Keep the response queued until the browser is online again.
+    }
     return { accepted: true as const }
   }
 
