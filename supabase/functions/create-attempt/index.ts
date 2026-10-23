@@ -78,6 +78,12 @@ async function readSnapshot(client: ReturnType<typeof createServiceClient>, user
   `).eq('attempt_id', attemptId).order('ordinal')
   if (itemError) throw itemError
 
+  const { data: responses, error: responseError } = await client.from('responses')
+    .select('attempt_item_id, choice_id, marked, answered_at')
+    .eq('attempt_id', attemptId).eq('user_id', userId)
+  if (responseError) throw responseError
+  const itemById = new Map((items ?? []).map((item) => [item.id, item]))
+
   const groupIds = [...new Set((items ?? []).map((item) => item.group_id).filter(Boolean))]
   const { data: groupMedia } = groupIds.length
     ? await client.from('media').select('id, group_id, kind, storage_path, metadata, status')
@@ -88,6 +94,14 @@ async function readSnapshot(client: ReturnType<typeof createServiceClient>, user
     id: attempt.id, mode: attempt.mode, status: attempt.status, locale: attempt.locale, seed: attempt.seed,
     currentSection: attempt.current_section, serverNow: new Date().toISOString(),
     startedAt: attempt.started_at, sectionExpiresAt: attempt.section_expires_at,
+    responses: (responses ?? []).flatMap((response) => {
+      const item = itemById.get(response.attempt_item_id)
+      return item ? [{
+        attemptId: attempt.id, attemptItemId: response.attempt_item_id,
+        questionVersionId: item.question_version_id, choiceId: response.choice_id,
+        marked: response.marked, answeredAt: response.answered_at,
+      }] : []
+    }),
     items: (items ?? []).map((item) => {
       const version = item.question_versions as unknown as Question & { choice_shuffle_allowed: boolean }
       const choiceOrder = item.choice_order as string[]

@@ -6,6 +6,7 @@ import { ExistingAttemptError, InsufficientQuestionPoolError, SupabaseAttemptRep
 const snapshot = {
   id: 'attempt-1', mode: 'quick', status: 'in_progress', locale: 'th', seed: 'server-seed',
   currentSection: 'listening', serverNow: '2026-10-20T00:00:00Z', startedAt: '2026-10-20T00:00:00Z', sectionExpiresAt: '2026-10-20T00:12:00Z',
+  responses: [],
   items: [{ attemptItemId: 'item-1', ordinal: 1, section: 'listening', part: 1, groupId: null, questionVersionId: 'qv-1',
     prompt: { text: 'Question' }, media: [], choices: [{ id: 'c-1', label: 'A', content: { text: 'Choice' } }],
     choiceOrder: ['c-1'], choiceShuffleAllowed: false }],

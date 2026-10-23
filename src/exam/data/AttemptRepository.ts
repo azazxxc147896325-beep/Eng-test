@@ -1,4 +1,5 @@
 import type { ExamChoice, ExamMedia, ExamMode, ExamSection, JsonValue, Part } from '../domain/types'
+import type { ResponseMutation } from './ResponseRepository'
 
 export type CreateAttemptInput = {
   mode: ExamMode
@@ -33,6 +34,7 @@ export type AttemptSnapshot = {
   serverNow: string
   startedAt: string
   sectionExpiresAt: string | null
+  responses?: ResponseMutation[]
   items: AttemptItemSnapshot[]
 }
 

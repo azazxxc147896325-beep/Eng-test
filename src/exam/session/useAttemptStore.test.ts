@@ -20,6 +20,18 @@ describe('attempt store', () => {
     expect(resumed.getState().snapshot.seed).toBe(original.getState().snapshot.seed)
   })
 
+  it('restores saved answers and marks from the server snapshot', () => {
+    const resumed = createAttemptStore({
+      ...snapshot,
+      responses: [{
+        attemptId: 'attempt-1', attemptItemId: 'i1', questionVersionId: 'q1',
+        choiceId: 'choice-a', marked: true, answeredAt: '2026-10-20T00:01:00Z',
+      }],
+    }, { queueResponse: vi.fn() })
+
+    expect(resumed.getState().responses.i1).toEqual(expect.objectContaining({ choiceId: 'choice-a', marked: true }))
+  })
+
   it('autosaves answers and never crosses a Section through normal navigation', async () => {
     const queueResponse = vi.fn().mockResolvedValue({ accepted: true })
     const store = createAttemptStore(snapshot, { queueResponse })

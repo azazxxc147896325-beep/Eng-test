@@ -14,6 +14,14 @@ const snapshotSchema = z.object({
   serverNow: z.string(),
   startedAt: z.string(),
   sectionExpiresAt: z.string().nullable(),
+  responses: z.array(z.object({
+    attemptId: z.string(),
+    attemptItemId: z.string(),
+    questionVersionId: z.string(),
+    choiceId: z.string().nullable(),
+    marked: z.boolean(),
+    answeredAt: z.string(),
+  })).default([]),
   items: z.array(z.object({
     attemptItemId: z.string(),
     ordinal: z.number().int().positive(),

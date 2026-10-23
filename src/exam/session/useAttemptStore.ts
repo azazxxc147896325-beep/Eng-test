@@ -36,7 +36,7 @@ export function createAttemptStore(
     currentItemIndex: Math.max(0, snapshot.items.findIndex((item) => item.section === snapshot.currentSection)),
     currentSection: snapshot.currentSection,
     sectionExpiresAt: snapshot.sectionExpiresAt,
-    responses: {},
+    responses: Object.fromEntries((snapshot.responses ?? []).map((response) => [response.attemptItemId, response])),
   }
   const listeners = new Set<() => void>()
   const update = (next: AttemptStoreState) => {
