@@ -17,6 +17,7 @@
     "@vitejs/plugin-react": "latest",
     "i18next": "^26.5.2",
     "idb": "^8.0.4",
+    "lucide-react": "^0.468.0",
     "react": "latest",
     "react-dom": "latest",
     "react-i18next": "^17.1.0",

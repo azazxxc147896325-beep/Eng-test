@@ -5,6 +5,7 @@ import { Button } from '../shared/ui/Button'
 import { ProgressBar } from '../shared/ui/ProgressBar'
 import { getBrowserClient } from '../shared/supabase/browser'
 import { SupabaseResultsRepository, type HistoryEntry, type ResultsRepository } from '../results/resultsRepository'
+import { ArrowRight, Play, Plus } from 'lucide-react'
 
 export function HomePage({ history: suppliedHistory, repository: suppliedRepository }: { history?: HistoryEntry[]; repository?: ResultsRepository }) {
   const { t } = useTranslation()
@@ -25,14 +26,14 @@ export function HomePage({ history: suppliedHistory, repository: suppliedReposit
 
   return (
     <main className="page learner-home">
-      <header className="home-heading"><div><p className="eyebrow">{t('home.eyebrow')}</p><h1>{t('home.welcome')}</h1><p className="muted">{t('home.welcomeDetail')}</p></div><Button onClick={() => navigate('/play')}>＋ {t('home.newPractice')}</Button></header>
+      <header className="home-heading"><div><p className="eyebrow">{t('home.eyebrow')}</p><h1>{t('home.welcome')}</h1><p className="muted">{t('home.welcomeDetail')}</p></div><Button onClick={() => navigate('/play')}><Plus aria-hidden="true" size={18} />{t('home.newPractice')}</Button></header>
       <div className="dashboard-grid">
         <section className="dashboard-main">
           <article className="daily-mission">
             <div><span className="mission-label">{t('home.mission')}</span><h2>{t('home.missionTitle')}</h2><p>{t('home.missionDetail')}</p><div className="mission-meta"><span>10 {t('exam.questions')}</span><span>≈ 8 min</span></div></div>
-            <Button size="large" onClick={() => navigate('/play')}>▶ {t('home.play')}</Button>
+            <Button size="large" onClick={() => navigate('/play')}><Play aria-hidden="true" size={18} />{t('home.play')}</Button>
           </article>
-          <section className="part-shortcuts"><div className="section-title"><h2>{t('home.practiceByPart')}</h2><button onClick={() => navigate('/play')}>{t('home.viewAll')}</button></div><div className="part-shortcut-grid">{[5, 6, 7].map((part) => <button key={part} onClick={() => navigate('/play')}><b>Part {part}</b><span>{t(`home.part${part}`)}</span><i aria-hidden="true">→</i></button>)}</div></section>
+          <section className="part-shortcuts"><div className="section-title"><h2>{t('home.practiceByPart')}</h2><button onClick={() => navigate('/play')}>{t('home.viewAll')}</button></div><div className="part-shortcut-grid">{[5, 6, 7].map((part) => <button key={part} onClick={() => navigate('/play')}><b>Part {part}</b><span>{t(`home.part${part}`)}</span><i aria-hidden="true"><ArrowRight size={17} /></i></button>)}</div></section>
         </section>
         <aside className="dashboard-side">
           <section className="score-panel">

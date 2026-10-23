@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { Button } from '../shared/ui/Button'
 import { LanguageSwitch } from '../shared/ui/LanguageSwitch'
 import { rememberReturnTo, useAuth } from './AuthProvider'
+import { LogIn } from 'lucide-react'
 
 export function LoginPage() {
   const { t } = useTranslation()
@@ -34,7 +35,7 @@ export function LoginPage() {
       <section className="auth-panel">
         <div className="auth-panel-top"><LanguageSwitch /></div>
         <div className="auth-card">
-          <span className="auth-icon" aria-hidden="true">↗</span>
+          <span className="auth-icon" aria-hidden="true"><LogIn /></span>
           <h2>{t('auth.title')}</h2>
           <p className="muted">{t('auth.detail')}</p>
           <Button size="large" onClick={() => void login()} disabled={loading}>

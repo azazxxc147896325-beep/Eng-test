@@ -6,6 +6,7 @@ import type { AttemptRepository, CreateAttemptInput } from '../exam/data/Attempt
 import { ExistingAttemptError, InsufficientQuestionPoolError, SupabaseAttemptRepository } from '../exam/data/SupabaseAttemptRepository'
 import { getBrowserClient } from '../shared/supabase/browser'
 import { Button } from '../shared/ui/Button'
+import { Clock3, Layers3, Zap } from 'lucide-react'
 
 function requestKey() {
   return globalThis.crypto?.randomUUID?.() ?? `${Date.now()}-${Math.random().toString(16).slice(2)}`
@@ -43,20 +44,20 @@ export function ModeSelectPage({ repository: suppliedRepository }: { repository?
       {error && <p className="mode-error" role="alert">{error}</p>}
       <div className="mode-feature-grid">
         <section className="mode-choice mode-choice-featured">
-          <span className="mode-badge">{t('modes.realBadge')}</span><span className="mode-choice-icon" aria-hidden="true">◷</span>
+          <span className="mode-badge">{t('modes.realBadge')}</span><span className="mode-choice-icon" aria-hidden="true"><Clock3 /></span>
           <h2>{t('modes.full')}</h2><p>{t('modes.fullDetail')}</p>
           <div className="mode-facts"><span>Listening · 45 min</span><span>Reading · 75 min</span></div>
           <Button size="large" onClick={() => void start({ mode: 'full' })} disabled={starting !== null}>{starting === 'full' ? t('modes.starting') : t('modes.startFull')}</Button>
         </section>
         <section className="mode-choice">
-          <span className="mode-badge mode-badge-quick">{t('modes.quickBadge')}</span><span className="mode-choice-icon" aria-hidden="true">⚡</span>
+          <span className="mode-badge mode-badge-quick">{t('modes.quickBadge')}</span><span className="mode-choice-icon" aria-hidden="true"><Zap /></span>
           <h2>{t('modes.quick')}</h2><p>{t('modes.quickDetail')}</p>
           <div className="mode-facts"><span>50 {t('exam.questions')}</span><span>≈ 30 min</span></div>
           <Button size="large" onClick={() => void start({ mode: 'quick' })} disabled={starting !== null}>{starting === 'quick' ? t('modes.starting') : t('modes.startQuick')}</Button>
         </section>
       </div>
       <section className="practice-builder">
-        <div className="practice-copy"><span className="mode-choice-icon" aria-hidden="true">◎</span><div><h2>{t('modes.part')}</h2><p>{t('modes.partDetail')}</p></div></div>
+        <div className="practice-copy"><span className="mode-choice-icon" aria-hidden="true"><Layers3 /></span><div><h2>{t('modes.part')}</h2><p>{t('modes.partDetail')}</p></div></div>
         <div className="practice-controls">
           <label>Part<select value={part} onChange={(event) => setPart(Number(event.target.value) as Part)}>{[1, 2, 3, 4, 5, 6, 7].map((value) => <option key={value} value={value}>Part {value}</option>)}</select></label>
           <label>{t('modes.difficulty')}<select value={difficulty} onChange={(event) => setDifficulty(event.target.value as typeof difficulty)}><option value="easy">{t('modes.easy')}</option><option value="medium">{t('modes.medium')}</option><option value="hard">{t('modes.hard')}</option></select></label>

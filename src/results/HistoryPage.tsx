@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import { getBrowserClient } from '../shared/supabase/browser'
 import { ProgressChart } from './ProgressChart'
 import { SupabaseResultsRepository, type HistoryEntry, type ResultsRepository } from './resultsRepository'
+import { TrendingUp } from 'lucide-react'
 
 export function HistoryPage({ history: supplied, repository: suppliedRepository }: { history?: HistoryEntry[]; repository?: ResultsRepository }) {
   const { t } = useTranslation()
@@ -16,6 +17,6 @@ export function HistoryPage({ history: supplied, repository: suppliedRepository 
   const latest = verified.at(-1)?.total
   const change = latest !== undefined && previous !== undefined ? latest - previous : null
   return <main className="page history-page"><header className="history-heading"><div><p className="eyebrow">SCORE QUEST</p><h1>{t('results.history')}</h1><p className="muted">{t('results.historyDetail')}</p></div>{change !== null && <p className="score-change">{change >= 0 ? '+' : ''}{change} {t('results.points')}</p>}</header>
-    {history.length === 0 ? <section className="history-empty"><span aria-hidden="true">↗</span><h2>{t('results.noHistory')}</h2><p>{t('results.noHistoryDetail')}</p><button onClick={() => navigate('/play')}>{t('results.startPractice')}</button></section> : <ProgressChart entries={history} />}
+    {history.length === 0 ? <section className="history-empty"><span aria-hidden="true"><TrendingUp /></span><h2>{t('results.noHistory')}</h2><p>{t('results.noHistoryDetail')}</p><button onClick={() => navigate('/play')}>{t('results.startPractice')}</button></section> : <ProgressChart entries={history} />}
   </main>
 }
