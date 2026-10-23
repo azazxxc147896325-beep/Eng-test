@@ -24,6 +24,16 @@ describe('SupabaseAttemptRepository', () => {
     expect(invoke).toHaveBeenLastCalledWith('create-attempt', { body: { action: 'resume', attemptId: 'attempt-1' } })
   })
 
+  it('requests the Reading deadline from the server when transitioning sections', async () => {
+    const readingSnapshot = { ...snapshot, currentSection: 'reading', sectionExpiresAt: '2026-10-20T01:27:00Z' }
+    const invoke = vi.fn().mockResolvedValue({ data: readingSnapshot, error: null })
+    const repository = new SupabaseAttemptRepository({ functions: { invoke } } as unknown as SupabaseClient<Database>)
+
+    await expect((repository as unknown as { transition(id: string): Promise<unknown> }).transition('attempt-1'))
+      .resolves.toEqual(readingSnapshot)
+    expect(invoke).toHaveBeenCalledWith('create-attempt', { body: { action: 'transition', attemptId: 'attempt-1' } })
+  })
+
   it.each([
     ['insufficient_pool', InsufficientQuestionPoolError],
     ['existing_attempt', ExistingAttemptError],

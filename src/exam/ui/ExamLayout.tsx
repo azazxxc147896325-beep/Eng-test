@@ -6,8 +6,13 @@ import { AnswerNavigator } from './AnswerNavigator'
 import { ExamFooter } from './ExamFooter'
 import { QuestionRenderer } from './QuestionRenderer'
 import { createServerClock } from '../session/clock'
+import type { AttemptSnapshot } from '../data/AttemptRepository'
 
-export function ExamLayout({ store, onComplete }: { store: AttemptStore; onComplete: () => Promise<void> }) {
+export function ExamLayout({ store, onComplete, onTransition }: {
+  store: AttemptStore
+  onComplete: () => Promise<void>
+  onTransition?: () => Promise<AttemptSnapshot>
+}) {
   const { t } = useTranslation()
   const state = useAttemptStore(store)
   const [navigatorOpen, setNavigatorOpen] = useState(false)
@@ -52,8 +57,19 @@ export function ExamLayout({ store, onComplete }: { store: AttemptStore; onCompl
       return
     }
     if (isSectionEnd && nextSectionItem) {
-      const minutes = state.snapshot.mode === 'full' ? 75 : 18
-      store.transitionSection(nextSectionItem.section, new Date(clock.now().getTime() + minutes * 60_000).toISOString())
+      setFinishing(true)
+      setFinishError('')
+      try {
+        const transitioned = await onTransition?.()
+        store.transitionSection(
+          transitioned?.currentSection ?? nextSectionItem.section,
+          transitioned?.sectionExpiresAt ?? null,
+        )
+        setFinishing(false)
+      } catch {
+        setFinishError(t('exam.submitError'))
+        setFinishing(false)
+      }
       return
     }
     if (isLastQuestion) {

@@ -47,7 +47,7 @@ describe('ExamPage', () => {
     await waitFor(() => expect(submit).toHaveBeenCalledWith('attempt-1'))
   })
 
-  it('moves from the final Listening question to the first Reading question', () => {
+  it('moves from the final Listening question to the server-timed Reading section', async () => {
     const fullSnapshot: AttemptSnapshot = {
       ...snapshot,
       mode: 'full',
@@ -57,10 +57,16 @@ describe('ExamPage', () => {
         { ...snapshot.items[1], section: 'reading', part: 5, prompt: { text: 'First reading question' } },
       ],
     }
+    const readingSnapshot: AttemptSnapshot = {
+      ...fullSnapshot, currentSection: 'reading', sectionExpiresAt: '2026-10-20T02:00:00Z',
+    }
+    const transition = vi.fn().mockResolvedValue(readingSnapshot)
+    const repository = { transition } as unknown as import('../data/AttemptRepository').AttemptRepository
     const resultsRepository = { submit: vi.fn(), getResult: vi.fn(), getReview: vi.fn(), listHistory: vi.fn() }
-    render(<I18nextProvider i18n={i18n}><MemoryRouter><ExamPage snapshot={fullSnapshot} queue={{ queueResponse: vi.fn() }} resultsRepository={resultsRepository} /></MemoryRouter></I18nextProvider>)
+    render(<I18nextProvider i18n={i18n}><MemoryRouter><ExamPage snapshot={fullSnapshot} queue={{ queueResponse: vi.fn() }} repository={repository} resultsRepository={resultsRepository} /></MemoryRouter></I18nextProvider>)
 
     fireEvent.click(screen.getByRole('button', { name: /เริ่ม Reading|Start Reading/i }))
-    expect(screen.getByText('First reading question')).toBeVisible()
+    await waitFor(() => expect(transition).toHaveBeenCalledWith('attempt-1'))
+    expect(await screen.findByText('First reading question')).toBeVisible()
   })
 })

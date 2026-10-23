@@ -79,4 +79,12 @@ export class SupabaseAttemptRepository implements AttemptRepository {
     if (error) return throwMappedError(error)
     return snapshotSchema.parse(data) as AttemptSnapshot
   }
+
+  async transition(attemptId: string): Promise<AttemptSnapshot> {
+    const { data, error } = await this.client.functions.invoke('create-attempt', {
+      body: { action: 'transition', attemptId },
+    })
+    if (error) return throwMappedError(error)
+    return snapshotSchema.parse(data) as AttemptSnapshot
+  }
 }

@@ -12,7 +12,7 @@ describe('ModeSelectPage', () => {
   beforeEach(async () => { await i18n.changeLanguage('th') })
 
   it('creates a full test and opens its exam workspace', async () => {
-    const repository: AttemptRepository = { create: vi.fn().mockResolvedValue(snapshot), resume: vi.fn() }
+    const repository: AttemptRepository = { create: vi.fn().mockResolvedValue(snapshot), resume: vi.fn(), transition: vi.fn() }
     render(
       <I18nextProvider i18n={i18n}>
         <MemoryRouter initialEntries={['/play']}>
@@ -31,7 +31,7 @@ describe('ModeSelectPage', () => {
   })
 
   it('uses the selected Part, difficulty, and question count for practice', async () => {
-    const repository: AttemptRepository = { create: vi.fn().mockResolvedValue(snapshot), resume: vi.fn() }
+    const repository: AttemptRepository = { create: vi.fn().mockResolvedValue(snapshot), resume: vi.fn(), transition: vi.fn() }
     render(<I18nextProvider i18n={i18n}><MemoryRouter><ModeSelectPage repository={repository} /></MemoryRouter></I18nextProvider>)
 
     fireEvent.change(screen.getByLabelText('Part'), { target: { value: '7' } })

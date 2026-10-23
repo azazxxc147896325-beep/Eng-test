@@ -13,13 +13,27 @@ import './exam.css'
 
 type QueuePort = Pick<OfflineResponseQueue, 'queueResponse'>
 
-function ReadyExam({ snapshot, queue, resultsRepository }: { snapshot: AttemptSnapshot; queue: QueuePort; resultsRepository?: ResultsRepository }) {
+function ReadyExam({ snapshot, queue, attemptRepository, resultsRepository, onSnapshot }: {
+  snapshot: AttemptSnapshot
+  queue: QueuePort
+  attemptRepository?: AttemptRepository
+  resultsRepository?: ResultsRepository
+  onSnapshot: (snapshot: AttemptSnapshot) => void
+}) {
   const store = useMemo(() => createAttemptStore(snapshot, queue), [snapshot, queue])
   const navigate = useNavigate()
-  return <ExamLayout store={store} onComplete={async () => {
-    await (resultsRepository ?? new SupabaseResultsRepository(getBrowserClient())).submit(snapshot.id)
-    navigate(`/results/${snapshot.id}`, { replace: true })
-  }} />
+  return <ExamLayout
+    store={store}
+    onTransition={attemptRepository ? async () => {
+      const transitioned = await attemptRepository.transition(snapshot.id)
+      onSnapshot(transitioned)
+      return transitioned
+    } : undefined}
+    onComplete={async () => {
+      await (resultsRepository ?? new SupabaseResultsRepository(getBrowserClient())).submit(snapshot.id)
+      navigate(`/results/${snapshot.id}`, { replace: true })
+    }}
+  />
 }
 
 export function ExamPage({ snapshot: suppliedSnapshot, queue: suppliedQueue, repository: suppliedRepository, resultsRepository: suppliedResultsRepository }: {
@@ -48,5 +62,6 @@ export function ExamPage({ snapshot: suppliedSnapshot, queue: suppliedQueue, rep
 
   if (error) return <main className="exam-status" role="alert">{error}</main>
   if (!snapshot) return <main className="exam-status">{t('exam.loading')}</main>
-  return <ReadyExam snapshot={snapshot} queue={dependencies.queue} resultsRepository={suppliedResultsRepository} />
+  return <ReadyExam snapshot={snapshot} queue={dependencies.queue} attemptRepository={dependencies.repository}
+    resultsRepository={suppliedResultsRepository} onSnapshot={setSnapshot} />
 }

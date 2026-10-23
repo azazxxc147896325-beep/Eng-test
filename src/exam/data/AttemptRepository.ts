@@ -41,4 +41,5 @@ export type AttemptSnapshot = {
 export interface AttemptRepository {
   create(input: CreateAttemptInput): Promise<AttemptSnapshot>
   resume(attemptId: string): Promise<AttemptSnapshot>
+  transition(attemptId: string): Promise<AttemptSnapshot>
 }

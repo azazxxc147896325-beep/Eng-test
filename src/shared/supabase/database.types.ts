@@ -325,6 +325,9 @@ isOneToOne: false
 "submit_attempt":
 { Args: { "p_attempt_id": string,"p_scoring_version": string,"p_user_id": string }; Returns: string
                            },
+"transition_attempt_section":
+{ Args: { "p_attempt_id": string,"p_user_id": string }; Returns: string
+                           },
 "transition_question_version":
 { Args: { "p_notes"?: string,"p_question_version_id": string,"p_target_status": Database["public"]['Enums']["content_status"] }; Returns: Database["public"]['Enums']["content_status"]
                            },

@@ -195,6 +195,17 @@ async function createAttempt(client: ReturnType<typeof createServiceClient>, use
   return readSnapshot(client, userId, attemptId as string)
 }
 
+async function transitionAttempt(client: ReturnType<typeof createServiceClient>, userId: string, attemptId: string) {
+  const { error } = await client.rpc('transition_attempt_section', {
+    p_user_id: userId,
+    p_attempt_id: attemptId,
+  })
+  if (error?.code === '42501') throw new HttpError(404, 'attempt_not_found')
+  if (error?.code === '22023') throw new HttpError(409, 'invalid_section_transition')
+  if (error) throw error
+  return readSnapshot(client, userId, attemptId)
+}
+
 Deno.serve(async (request) => {
   const headers = corsHeaders(request)
   if (request.method === 'OPTIONS') return new Response(null, { status: 204, headers })
@@ -204,7 +215,9 @@ Deno.serve(async (request) => {
     const client = createServiceClient()
     const payload = body.action === 'resume'
       ? await readSnapshot(client, user.id, String(body.attemptId ?? ''))
-      : await createAttempt(client, user.id, body)
+      : body.action === 'transition'
+        ? await transitionAttempt(client, user.id, String(body.attemptId ?? ''))
+        : await createAttempt(client, user.id, body)
     return new Response(JSON.stringify(payload), { status: 200, headers })
   } catch (error) {
     const status = error instanceof HttpError ? error.status : 500
