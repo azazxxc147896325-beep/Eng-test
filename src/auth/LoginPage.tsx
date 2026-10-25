@@ -11,17 +11,21 @@ export function LoginPage() {
   const { user, loading, signInWithGoogle } = useAuth()
   const location = useLocation()
   const [error, setError] = useState('')
+  const [signingIn, setSigningIn] = useState(false)
   const next = (location.state as { from?: string } | null)?.from ?? '/home'
 
   if (!loading && user) return <Navigate to={next} replace />
 
   async function login() {
+    if (signingIn) return
     setError('')
+    setSigningIn(true)
     rememberReturnTo(next)
     try {
       await signInWithGoogle()
     } catch {
       setError(t('auth.loginError'))
+      setSigningIn(false)
     }
   }
 
@@ -38,8 +42,8 @@ export function LoginPage() {
           <span className="auth-icon" aria-hidden="true"><LogIn /></span>
           <h2>{t('auth.title')}</h2>
           <p className="muted">{t('auth.detail')}</p>
-          <Button size="large" onClick={() => void login()} disabled={loading}>
-            <span className="google-g" aria-hidden="true">G</span>{t('auth.google')}
+          <Button size="large" onClick={() => void login()} disabled={loading || signingIn}>
+            <span className="google-g" aria-hidden="true">G</span>{signingIn ? t('auth.finishing') : t('auth.google')}
           </Button>
           {error && <p className="form-error" role="alert">{error}</p>}
           <small className="auth-note">{t('auth.note')}</small>

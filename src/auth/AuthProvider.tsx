@@ -104,8 +104,13 @@ export function AuthProvider({
   }, [client])
 
   const signOut = useCallback(async () => {
-    const { error } = await client.auth.signOut()
-    if (error) throw error
+    setError(false)
+    try {
+      const { error: signOutError } = await client.auth.signOut()
+      if (signOutError) throw signOutError
+    } catch {
+      setError(true)
+    }
   }, [client])
 
   const value = useMemo(

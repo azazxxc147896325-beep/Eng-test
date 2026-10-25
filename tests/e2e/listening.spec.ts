@@ -23,7 +23,7 @@ test('Full Listening autoplays once and does not replay after reload', async ({ 
     serverNow: new Date().toISOString(), startedAt: new Date().toISOString(), sectionExpiresAt: new Date(Date.now() + 2_700_000).toISOString(),
     items: [{ attemptItemId: 'item-1', ordinal: 1, section: 'listening', part: 1, groupId: null, questionVersionId: 'q1',
       prompt: { text: 'Look at the picture.' }, choiceShuffleAllowed: false, choiceOrder: ['a'],
-      media: [{ id: 'audio-1', kind: 'audio', storagePath: '/audio.mp3', metadata: {} }],
+      media: [{ id: 'audio-1', kind: 'audio', storagePath: 'data:audio/wav;base64,UklGRiUAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQEAAACA', metadata: {} }],
       choices: [{ id: 'a', label: 'A', content: { text: 'Choice A' } }] }],
   }) }))
 

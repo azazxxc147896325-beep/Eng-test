@@ -14,8 +14,8 @@ function Harness() {
 }
 
 function RecoveryHarness() {
-  const { error, loading, retry } = useAuth()
-  return <main>{loading ? 'loading' : error ? <p role="alert">session failed</p> : 'ready'}<button onClick={() => void retry()}>retry session</button></main>
+  const { error, loading, retry, signOut } = useAuth()
+  return <main>{loading ? 'loading' : error ? <p role="alert">session failed</p> : 'ready'}<button onClick={() => void retry()}>retry session</button><button onClick={() => void signOut()}>sign out</button></main>
 }
 
 afterEach(cleanup)
@@ -69,5 +69,22 @@ describe('AuthProvider', () => {
     expect(await screen.findByRole('alert')).toHaveTextContent('session failed')
     fireEvent.click(screen.getByRole('button', { name: 'retry session' }))
     await waitFor(() => expect(screen.getByText('ready')).toBeVisible())
+  })
+
+  it('shows a recoverable state when signing out fails', async () => {
+    const client = {
+      auth: {
+        getSession: vi.fn().mockResolvedValue({ data: { session: null }, error: null }),
+        onAuthStateChange: vi.fn().mockReturnValue({ data: { subscription: { unsubscribe: vi.fn() } } }),
+        signInWithOAuth: vi.fn(),
+        signOut: vi.fn().mockRejectedValue(new Error('network unavailable')),
+      },
+    } as unknown as SupabaseClient<Database>
+
+    render(<AuthProvider client={client}><RecoveryHarness /></AuthProvider>)
+
+    await waitFor(() => expect(screen.getByText('ready')).toBeVisible())
+    fireEvent.click(screen.getByRole('button', { name: 'sign out' }))
+    expect(await screen.findByRole('alert')).toHaveTextContent('session failed')
   })
 })
