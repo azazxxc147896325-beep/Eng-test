@@ -8,6 +8,7 @@ import './i18n'
 import './shared/styles/global.css'
 import { AppErrorBoundary } from './app/AppErrorBoundary'
 import { ConnectivityBanner } from './shell/ConnectivityBanner'
+import { PwaUpdateManager } from './shell/PwaUpdateManager'
 
 const supabase = getBrowserClient()
 
@@ -16,6 +17,7 @@ createRoot(document.getElementById('root')!).render(
     <AppErrorBoundary>
       <AuthProvider client={supabase}>
         <ConnectivityBanner />
+        <PwaUpdateManager />
         <RouterProvider router={router} />
       </AuthProvider>
     </AppErrorBoundary>

@@ -172,7 +172,11 @@
     "backOnline": "You are back online.",
     "errorTitle": "Something went wrong on this page",
     "errorDetail": "Your saved data is still available. Reload the page and try again.",
-    "tryAgain": "Try again"
+    "tryAgain": "Try again",
+    "updateAvailable": "A new version is ready",
+    "updateDetail": "Update when ready. This page will reload once.",
+    "updateNow": "Update now",
+    "later": "Later"
   },
   "notFound": {
     "title": "Page not found",

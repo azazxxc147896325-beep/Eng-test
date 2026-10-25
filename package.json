@@ -38,6 +38,7 @@
     "jsdom": "latest",
     "tsx": "^4.23.15",
     "typescript": "latest",
-    "vitest": "latest"
+    "vitest": "latest",
+    "workbox-window": "^7.4.1"
   }
 }

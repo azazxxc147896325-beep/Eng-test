@@ -9,7 +9,7 @@ export default defineConfig({
   plugins: [
     react(),
     VitePWA({
-      registerType: 'autoUpdate',
+      registerType: 'prompt',
       manifest: false,
       devOptions: { enabled: true },
       workbox: { navigateFallback: `${basePath}index.html` },
