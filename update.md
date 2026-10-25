@@ -1,8 +1,10 @@
 # สถานะโปรเจกต์ Score Quest
 
-อัปเดตล่าสุด: 25 ตุลาคม 2026  
-Branch ที่ตรวจ: `feature/stability-foundation`  
-Commit ล่าสุด: `b3449db`
+อัปเดตล่าสุด: 25 ตุลาคม 2026
+
+Branch ที่ตรวจ: `feature/stability-foundation`
+
+Commit ฐานโค้ดที่ตรวจ: `b3449db`
 
 ## ภาพรวม
 
