@@ -21,6 +21,7 @@ import { UserManagementRoutePage } from '../admin/UserManagementRoutePage'
 import { routerBasePath } from './basePath'
 import { LandingPage } from '../shell/LandingPage'
 import { SettingsPage } from '../shell/SettingsPage'
+import { NotFoundPage } from './NotFoundPage'
 
 export const router = createBrowserRouter([
   { path: '/', element: <LandingPage /> },
@@ -53,4 +54,5 @@ export const router = createBrowserRouter([
       },
     ],
   },
+  { path: '*', element: <NotFoundPage /> },
 ], { basename: routerBasePath() })
