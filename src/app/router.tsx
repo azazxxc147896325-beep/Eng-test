@@ -1,27 +1,29 @@
 import { createBrowserRouter, Navigate } from 'react-router-dom'
-import { AppShell } from '../shell/AppShell'
-import { HomePage } from '../shell/HomePage'
-import { ModeSelectPage } from '../shell/ModeSelectPage'
-import { AuthCallbackPage } from '../auth/AuthCallbackPage'
-import { LoginPage } from '../auth/LoginPage'
 import { RequireRole } from './RequireRole'
 import { RequireUser } from './RequireUser'
-import { ExamPage } from '../exam/ui/ExamPage'
-import { ResultsPage } from '../results/ResultsPage'
-import { ReviewPage } from '../results/ReviewPage'
-import { HistoryPage } from '../results/HistoryPage'
-import { AdminLayout } from '../admin/AdminLayout'
-import { DashboardPage } from '../admin/DashboardPage'
-import { ReviewQueuePage } from '../admin/ReviewQueuePage'
-import { ImportPage } from '../admin/ImportPage'
-import { GenerateQuestionsPanel } from '../admin/GenerateQuestionsPanel'
-import { QuestionBankPage } from '../admin/QuestionBankPage'
-import { QuestionEditorRoutePage } from '../admin/QuestionEditorRoutePage'
-import { UserManagementRoutePage } from '../admin/UserManagementRoutePage'
 import { routerBasePath } from './basePath'
-import { LandingPage } from '../shell/LandingPage'
-import { SettingsPage } from '../shell/SettingsPage'
-import { NotFoundPage } from './NotFoundPage'
+import { lazyNamed } from './lazyNamed'
+
+const AppShell = lazyNamed(() => import('../shell/AppShell'), 'AppShell')
+const HomePage = lazyNamed(() => import('../shell/HomePage'), 'HomePage')
+const ModeSelectPage = lazyNamed(() => import('../shell/ModeSelectPage'), 'ModeSelectPage')
+const LandingPage = lazyNamed(() => import('../shell/LandingPage'), 'LandingPage')
+const SettingsPage = lazyNamed(() => import('../shell/SettingsPage'), 'SettingsPage')
+const LoginPage = lazyNamed(() => import('../auth/LoginPage'), 'LoginPage')
+const AuthCallbackPage = lazyNamed(() => import('../auth/AuthCallbackPage'), 'AuthCallbackPage')
+const ExamPage = lazyNamed(() => import('../exam/ui/ExamPage'), 'ExamPage')
+const ResultsPage = lazyNamed(() => import('../results/ResultsPage'), 'ResultsPage')
+const ReviewPage = lazyNamed(() => import('../results/ReviewPage'), 'ReviewPage')
+const HistoryPage = lazyNamed(() => import('../results/HistoryPage'), 'HistoryPage')
+const AdminLayout = lazyNamed(() => import('../admin/AdminLayout'), 'AdminLayout')
+const DashboardPage = lazyNamed(() => import('../admin/DashboardPage'), 'DashboardPage')
+const ReviewQueuePage = lazyNamed(() => import('../admin/ReviewQueuePage'), 'ReviewQueuePage')
+const ImportPage = lazyNamed(() => import('../admin/ImportPage'), 'ImportPage')
+const GenerateQuestionsPanel = lazyNamed(() => import('../admin/GenerateQuestionsPanel'), 'GenerateQuestionsPanel')
+const QuestionBankPage = lazyNamed(() => import('../admin/QuestionBankPage'), 'QuestionBankPage')
+const QuestionEditorRoutePage = lazyNamed(() => import('../admin/QuestionEditorRoutePage'), 'QuestionEditorRoutePage')
+const UserManagementRoutePage = lazyNamed(() => import('../admin/UserManagementRoutePage'), 'UserManagementRoutePage')
+const NotFoundPage = lazyNamed(() => import('./NotFoundPage'), 'NotFoundPage')
 
 export const router = createBrowserRouter([
   { path: '/', element: <LandingPage /> },
