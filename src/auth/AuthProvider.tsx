@@ -11,6 +11,8 @@ type AuthValue = {
   profile: Profile | null
   roles: AppRole[]
   loading: boolean
+  error: boolean
+  retry: () => Promise<void>
   signInWithGoogle: () => Promise<void>
   signOut: () => Promise<void>
 }
@@ -29,8 +31,10 @@ export function AuthProvider({
   const [profile, setProfile] = useState<Profile | null>(null)
   const [roles, setRoles] = useState<AppRole[]>([])
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(false)
 
   const resolveSession = useCallback(async (session: Session | null) => {
+    setError(false)
     const nextUser = session?.user ?? null
     setUser(nextUser)
 
@@ -46,28 +50,42 @@ export function AuthProvider({
       client.from('profiles').select('*').eq('id', nextUser.id).maybeSingle(),
       client.from('user_roles').select('role').eq('user_id', nextUser.id),
     ])
+    if (profileResult.error || rolesResult.error) throw profileResult.error ?? rolesResult.error
 
     setProfile(profileResult.data ?? null)
     setRoles((rolesResult.data ?? []).map(({ role }) => role))
     setLoading(false)
   }, [client])
 
+  const retry = useCallback(async () => {
+    setLoading(true)
+    setError(false)
+    try {
+      const { data, error: sessionError } = await client.auth.getSession()
+      if (sessionError) throw sessionError
+      await resolveSession(data.session)
+    } catch {
+      setError(true)
+      setLoading(false)
+    }
+  }, [client, resolveSession])
+
   useEffect(() => {
     let active = true
 
-    void client.auth.getSession().then(({ data }) => {
-      if (active) void resolveSession(data.session)
-    })
+    void retry()
 
     const { data } = client.auth.onAuthStateChange((_event, session) => {
-      if (active) void resolveSession(session)
+      if (active) void resolveSession(session).catch(() => {
+        if (active) { setError(true); setLoading(false) }
+      })
     })
 
     return () => {
       active = false
       data.subscription.unsubscribe()
     }
-  }, [client, resolveSession])
+  }, [client, resolveSession, retry])
 
   const signInWithGoogle = useCallback(async () => {
     const currentPath = `${routePath(window.location.pathname)}${window.location.search}`
@@ -91,8 +109,8 @@ export function AuthProvider({
   }, [client])
 
   const value = useMemo(
-    () => ({ user, profile, roles, loading, signInWithGoogle, signOut }),
-    [user, profile, roles, loading, signInWithGoogle, signOut],
+    () => ({ user, profile, roles, loading, error, retry, signInWithGoogle, signOut }),
+    [user, profile, roles, loading, error, retry, signInWithGoogle, signOut],
   )
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>

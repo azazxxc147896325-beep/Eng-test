@@ -1,7 +1,7 @@
-import { fireEvent, render, screen, waitFor } from '@testing-library/react'
+import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { I18nextProvider } from 'react-i18next'
 import { MemoryRouter } from 'react-router-dom'
-import { describe, expect, it, vi } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 import { i18n } from '../../i18n'
 import type { AttemptSnapshot } from '../data/AttemptRepository'
 import { ExamPage } from './ExamPage'
@@ -17,7 +17,23 @@ const snapshot: AttemptSnapshot = {
   })),
 }
 
+afterEach(() => { cleanup(); vi.unstubAllEnvs() })
+
 describe('ExamPage', () => {
+  it('can retry loading an attempt after a temporary failure', async () => {
+    vi.stubEnv('VITE_SUPABASE_URL', 'https://example.supabase.co')
+    vi.stubEnv('VITE_SUPABASE_PUBLISHABLE_KEY', 'public-test-key')
+    const resume = vi.fn().mockRejectedValueOnce(new Error('offline')).mockResolvedValueOnce(snapshot)
+    const repository = { resume } as unknown as import('../data/AttemptRepository').AttemptRepository
+
+    render(<I18nextProvider i18n={i18n}><MemoryRouter><ExamPage queue={{ queueResponse: vi.fn() }} repository={repository} /></MemoryRouter></I18nextProvider>)
+
+    expect(await screen.findByRole('alert')).toHaveTextContent(/โหลดข้อสอบไม่สำเร็จ|could not load/i)
+    fireEvent.click(screen.getByRole('button', { name: /ลองใหม่|retry/i }))
+    expect(await screen.findByText('Question 1')).toBeVisible()
+    expect(resume).toHaveBeenCalledTimes(2)
+  })
+
   it('retries queued answers on load and when the browser comes back online', async () => {
     const flushResponses = vi.fn().mockResolvedValue({ saved: 0, pending: 0 })
     const { unmount } = render(<I18nextProvider i18n={i18n}><MemoryRouter><ExamPage snapshot={snapshot}

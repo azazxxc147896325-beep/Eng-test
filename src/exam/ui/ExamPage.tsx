@@ -9,6 +9,7 @@ import { OfflineResponseQueue } from '../session/offlineQueue'
 import { createAttemptStore } from '../session/useAttemptStore'
 import { ExamLayout } from './ExamLayout'
 import { SupabaseResultsRepository, type ResultsRepository } from '../../results/resultsRepository'
+import { RefreshCw } from 'lucide-react'
 import './exam.css'
 
 type QueuePort = Pick<OfflineResponseQueue, 'queueResponse'> & Partial<Pick<OfflineResponseQueue, 'flushResponses'>>
@@ -52,6 +53,7 @@ export function ExamPage({ snapshot: suppliedSnapshot, queue: suppliedQueue, rep
   const { attemptId = '' } = useParams()
   const [snapshot, setSnapshot] = useState<AttemptSnapshot | null>(suppliedSnapshot ?? null)
   const [error, setError] = useState('')
+  const [loadVersion, setLoadVersion] = useState(0)
   const dependencies = useMemo(() => {
     if (suppliedSnapshot && suppliedQueue) return { queue: suppliedQueue, repository: suppliedRepository }
     const client = getBrowserClient()
@@ -64,9 +66,9 @@ export function ExamPage({ snapshot: suppliedSnapshot, queue: suppliedQueue, rep
   useEffect(() => {
     if (suppliedSnapshot) return
     void dependencies.repository?.resume(attemptId).then(setSnapshot).catch(() => setError(t('exam.loadError')))
-  }, [attemptId, dependencies.repository, suppliedSnapshot, t])
+  }, [attemptId, dependencies.repository, suppliedSnapshot, t, loadVersion])
 
-  if (error) return <main className="exam-status" role="alert">{error}</main>
+  if (error) return <main className="exam-status exam-load-error" role="alert"><p>{error}</p><button type="button" onClick={() => { setError(''); setLoadVersion((value) => value + 1) }}><RefreshCw aria-hidden="true" size={18} />{t('stability.retry')}</button></main>
   if (!snapshot) return <main className="exam-status">{t('exam.loading')}</main>
   return <ReadyExam snapshot={snapshot} queue={dependencies.queue} attemptRepository={dependencies.repository}
     resultsRepository={suppliedResultsRepository} onSnapshot={setSnapshot} />

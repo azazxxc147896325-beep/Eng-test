@@ -95,6 +95,8 @@
     "loading": "Checking your account…",
     "finishing": "Finishing sign-in…",
     "notAuthorized": "Not authorized to view this page",
+    "connectionError": "Could not connect to your account",
+    "connectionErrorDetail": "Check your connection and try again. Your saved data will not be removed.",
     "loginError": "Sign-in failed. Please try again.",
     "callbackError": "Could not finish signing in.",
     "tryAgain": "Try signing in again"
@@ -163,6 +165,14 @@
     "noHistory": "No results yet",
     "noHistoryDetail": "Start practicing or complete your first Full Test and your results will appear here.",
     "startPractice": "Start practicing"
+  },
+  "stability": {
+    "offline": "You are offline. Answers will wait until the connection returns.",
+    "retry": "Retry",
+    "backOnline": "You are back online.",
+    "errorTitle": "Something went wrong on this page",
+    "errorDetail": "Your saved data is still available. Reload the page and try again.",
+    "tryAgain": "Try again"
   },
   "admin": {
     "dashboard": "System overview",

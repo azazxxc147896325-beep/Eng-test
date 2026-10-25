@@ -1,9 +1,11 @@
-import { render, screen } from '@testing-library/react'
+import { cleanup, fireEvent, render, screen } from '@testing-library/react'
 import { I18nextProvider } from 'react-i18next'
 import { MemoryRouter } from 'react-router-dom'
-import { describe, expect, it } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 import { i18n } from '../i18n'
 import { HistoryPage } from './HistoryPage'
+
+afterEach(cleanup)
 
 describe('HistoryPage', () => {
   it('charts only verified Full Tests and provides a readable table and comparison', () => {
@@ -24,5 +26,16 @@ describe('HistoryPage', () => {
     render(<I18nextProvider i18n={i18n}><MemoryRouter><HistoryPage history={[]} /></MemoryRouter></I18nextProvider>)
     expect(screen.getByText(/ยังไม่มีผลสอบ|No results yet/i)).toBeVisible()
     expect(screen.getByRole('button', { name: /เริ่มฝึก|Start practicing/i })).toBeVisible()
+  })
+
+  it('shows a retry action when history loading fails', async () => {
+    const listHistory = vi.fn().mockRejectedValueOnce(new Error('offline')).mockResolvedValueOnce([])
+    const repository = { listHistory, submit: vi.fn(), getResult: vi.fn(), getReview: vi.fn() }
+    render(<I18nextProvider i18n={i18n}><MemoryRouter><HistoryPage repository={repository} /></MemoryRouter></I18nextProvider>)
+
+    expect(await screen.findByRole('alert')).toHaveTextContent(/โหลดผลสอบไม่สำเร็จ|could not load/i)
+    fireEvent.click(screen.getByRole('button', { name: /ลองใหม่|retry/i }))
+    expect(await screen.findByText(/ยังไม่มีผลสอบ|No results yet/i)).toBeVisible()
+    expect(listHistory).toHaveBeenCalledTimes(2)
   })
 })

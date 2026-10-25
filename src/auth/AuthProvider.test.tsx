@@ -1,6 +1,6 @@
-import { fireEvent, render, screen, waitFor } from '@testing-library/react'
+import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react'
 import type { SupabaseClient } from '@supabase/supabase-js'
-import { describe, expect, it, vi } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 import type { Database } from '../shared/supabase/database.types'
 import { AuthProvider, useAuth } from './AuthProvider'
 
@@ -12,6 +12,13 @@ function Harness() {
     </button>
   )
 }
+
+function RecoveryHarness() {
+  const { error, loading, retry } = useAuth()
+  return <main>{loading ? 'loading' : error ? <p role="alert">session failed</p> : 'ready'}<button onClick={() => void retry()}>retry session</button></main>
+}
+
+afterEach(cleanup)
 
 describe('AuthProvider', () => {
   it('starts a mobile-safe Google OAuth redirect', async () => {
@@ -42,5 +49,25 @@ describe('AuthProvider', () => {
         options: expect.objectContaining({ redirectTo: expect.stringContaining('/auth/callback') }),
       }),
     )
+  })
+
+  it('leaves the loading state and can retry after session recovery fails', async () => {
+    const getSession = vi.fn()
+      .mockRejectedValueOnce(new Error('network unavailable'))
+      .mockResolvedValueOnce({ data: { session: null }, error: null })
+    const client = {
+      auth: {
+        getSession,
+        onAuthStateChange: vi.fn().mockReturnValue({ data: { subscription: { unsubscribe: vi.fn() } } }),
+        signInWithOAuth: vi.fn(),
+        signOut: vi.fn(),
+      },
+    } as unknown as SupabaseClient<Database>
+
+    render(<AuthProvider client={client}><RecoveryHarness /></AuthProvider>)
+
+    expect(await screen.findByRole('alert')).toHaveTextContent('session failed')
+    fireEvent.click(screen.getByRole('button', { name: 'retry session' }))
+    await waitFor(() => expect(screen.getByText('ready')).toBeVisible())
   })
 })
